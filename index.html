@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard de Produção — M Dias Branco × Firma Produções</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg:       #080808;
+      --bg2:      #111111;
+      --bg3:      #1a1a1a;
+      --bg4:      #222222;
+      --red:      #E30613;
+      --red-d:    #b8040f;
+      --red-l:    #ff2030;
+      --white:    #ffffff;
+      --g1:       #cccccc;
+      --g2:       #888888;
+      --g3:       #444444;
+      --g4:       #2a2a2a;
+      --green:    #22c55e;
+      --yellow:   #f59e0b;
+      --font:     'Montserrat', sans-serif;
+      --r:        12px;
+      --r-sm:     8px;
+    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg); color: var(--white); min-height: 100vh; }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg2); }
+    ::-webkit-scrollbar-thumb { background: var(--g3); border-radius: 3px; }
+
+    /* ─── HEADER ─── */
+    header {
+      position: sticky; top: 0; z-index: 200;
+      background: rgba(8,8,8,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid #1e1e1e;
+      height: 68px;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px;
+    }
+    .logo { display: flex; align-items: center; gap: 16px; }
+    .logo-client-svg { height: 26px; width: auto; opacity: .92; }
+    .logo-firma-svg  { height: 22px; width: auto; opacity: .85; }
+    .logo-sep { width: 1px; height: 28px; background: #2a2a2a; }
+    .logo-mark {
+      width: 36px; height: 36px;
+      background: var(--red);
+      border-radius: 6px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 18px; font-weight: 900; letter-spacing: -1px;
+      flex-shrink: 0;
+    }
+    .logo-texts { display: flex; flex-direction: column; }
+    .logo-name { font-size: 13px; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1; }
+    .logo-sub  { font-size: 10px; font-weight: 500; color: var(--g2); letter-spacing: 0.12em; text-transform: uppercase; margin-top: 3px; }
+    .header-right { display: flex; align-items: center; gap: 12px; }
+    .last-update { font-size: 11px; color: var(--g2); }
+    #btn-open-login {
+      background: var(--red); color: #fff; border: none;
+      padding: 8px 18px; border-radius: 6px;
+      font-family: var(--font); font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: background .2s;
+      display: flex; align-items: center; gap: 6px;
+    }
+    #btn-open-login:hover { background: var(--red-d); }
+    #btn-open-admin {
+      display: none;
+      background: transparent; color: var(--red); border: 1px solid var(--red);
+      padding: 8px 18px; border-radius: 6px;
+      font-family: var(--font); font-size: 12px; font-weight: 700;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      cursor: pointer; transition: all .2s;
+    }
+    #btn-open-admin:hover { background: rgba(227,6,19,0.1); }
+
+    /* ─── MAIN ─── */
+    main { max-width: 1280px; margin: 0 auto; padding: 40px 40px 80px; }
+
+    /* ─── HERO ─── */
+    .hero {
+      position: relative; overflow: hidden;
+      background: linear-gradient(135deg, #141414 0%, #180000 60%, #1a0000 100%);
+      border: 1px solid #2a2a2a;
+      border-radius: 16px;
+      padding: 44px 48px;
+      margin-bottom: 28px;
+    }
+    .hero::after {
+      content: '';
+      position: absolute; top: 0; right: 0; bottom: 0; width: 40%;
+      background: radial-gradient(ellipse at 80% 50%, rgba(227,6,19,.12) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-logo { height: 44px; width: auto; margin-bottom: 22px; opacity: .95; display: block; }
+    .hero-footer { display: flex; align-items: center; gap: 10px; margin-top: 28px; padding-top: 20px; border-top: 1px solid #2a2a2a; }
+    .hero-footer-lbl { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--g2); }
+    .hero-firma-svg { height: 18px; width: auto; opacity: .7; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: rgba(227,6,19,.12); border: 1px solid rgba(227,6,19,.3);
+      color: var(--red); font-size: 10px; font-weight: 700;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: 5px 12px; border-radius: 20px; margin-bottom: 18px;
+    }
+    .hero-badge span { width: 6px; height: 6px; background: var(--red); border-radius: 50%; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:.3; } }
+    .hero-title { font-size: 34px; font-weight: 900; letter-spacing: -.02em; line-height: 1.1; margin-bottom: 6px; }
+    .hero-title span { color: var(--red); }
+    .hero-desc { font-size: 14px; color: var(--g2); font-weight: 400; line-height: 1.5; max-width: 600px; margin-bottom: 32px; }
+    .hero-meta { display: flex; flex-wrap: wrap; gap: 32px; margin-bottom: 32px; }
+    .meta-item label { display: block; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--g2); margin-bottom: 4px; }
+    .meta-item span  { font-size: 14px; font-weight: 600; }
+    .hero-progress-wrap { max-width: 600px; }
+    .progress-row { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 8px; }
+    .progress-lbl { font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--g2); }
+    .progress-pct { font-size: 22px; font-weight: 900; color: var(--red); }
+    .progress-bar { height: 5px; background: #2a2a2a; border-radius: 3px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--red-d), var(--red-l)); border-radius: 3px; transition: width .8s cubic-bezier(.4,0,.2,1); }
+
+    /* ─── STAGE TABS ─── */
+    .stage-tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 28px; }
+    .stage-tab {
+      background: var(--bg2); border: 2px solid transparent;
+      border-radius: var(--r); padding: 20px 22px;
+      cursor: pointer; transition: all .2s; text-align: left;
+    }
+    .stage-tab:hover { border-color: var(--g3); background: var(--bg3); }
+    .stage-tab.active { border-color: var(--red); background: rgba(227,6,19,.05); }
+    .stage-tab-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .stage-tab-icon { font-size: 22px; }
+    .stage-tab-count { font-size: 11px; font-weight: 600; color: var(--g2); background: var(--bg4); padding: 2px 8px; border-radius: 10px; }
+    .stage-tab-name { font-size: 12px; font-weight: 800; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 3px; }
+    .stage-tab-sub  { font-size: 11px; color: var(--g2); margin-bottom: 12px; }
+    .mini-bar { height: 3px; background: var(--g4); border-radius: 2px; overflow: hidden; }
+    .mini-fill { height: 100%; background: var(--red); border-radius: 2px; transition: width .6s; }
+
+    /* ─── STEPS ─── */
+    .stage-panel { display: none; }
+    .stage-panel.active { display: block; }
+    .stage-panel-header { display: flex; align-items: center; gap: 12px; margin-bottom: 18px; }
+    .stage-panel-header h2 { font-size: 20px; font-weight: 800; }
+    .steps-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .step-card {
+      background: var(--bg2); border: 1px solid #1e1e1e;
+      border-left: 3px solid transparent;
+      border-radius: var(--r); overflow: hidden;
+      transition: border-color .2s, transform .15s;
+    }
+    .step-card:hover { transform: translateY(-1px); }
+    .step-card.done        { border-left-color: var(--green); }
+    .step-card.in-progress { border-left-color: var(--red); }
+    .step-card.pending     { border-left-color: var(--g3); }
+    .step-card.review      { border-left-color: var(--yellow); }
+
+    .step-head {
+      padding: 18px 22px;
+      display: flex; align-items: center; gap: 14px;
+      cursor: pointer; user-select: none;
+    }
+    .step-ico {
+      width: 38px; height: 38px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 17px; flex-shrink: 0;
+    }
+    .step-ico.done        { background: rgba(34,197,94,.12); }
+    .step-ico.in-progress { background: rgba(227,6,19,.12); }
+    .step-ico.pending     { background: var(--bg4); }
+    .step-ico.review      { background: rgba(245,158,11,.12); }
+
+    .step-info { flex: 1; min-width: 0; }
+    .step-name { font-size: 14px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .step-resp { font-size: 11px; color: var(--g2); margin-top: 2px; }
+
+    .step-right { display: flex; align-items: center; gap: 14px; flex-shrink: 0; }
+    .step-dl label { font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--g2); display: block; }
+    .step-dl span  { font-size: 12px; font-weight: 600; }
+    .step-dl .overdue { color: var(--red); }
+
+    .badge {
+      font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 20px; white-space: nowrap;
+    }
+    .badge.done        { background: rgba(34,197,94,.12);  color: var(--green); }
+    .badge.in-progress { background: rgba(227,6,19,.12);   color: var(--red); }
+    .badge.pending     { background: var(--bg4);           color: var(--g2); }
+    .badge.review      { background: rgba(245,158,11,.12); color: var(--yellow); }
+
+    .step-toggle { color: var(--g2); font-size: 14px; transition: transform .2s; }
+    .step-toggle.open { transform: rotate(180deg); }
+
+    .step-body {
+      display: none;
+      padding: 0 22px 22px;
+      border-top: 1px solid #1e1e1e;
+    }
+    .step-body.open { display: block; }
+    .step-desc {
+      font-size: 13px; color: var(--g1); line-height: 1.65;
+      padding-top: 18px; margin-bottom: 18px;
+    }
+    .attach-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--g2); margin-bottom: 8px; }
+    .attach-list { display: flex; flex-wrap: wrap; gap: 7px; }
+    .attach-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      background: var(--bg4); border: 1px solid #333;
+      border-radius: 6px; padding: 6px 12px;
+      font-size: 12px; font-weight: 500; color: var(--g1);
+      text-decoration: none; cursor: pointer; transition: all .18s;
+    }
+    .attach-chip:hover { background: #2a2a2a; border-color: var(--red); color: var(--white); }
+
+    /* ─── LOGIN MODAL ─── */
+    .overlay {
+      position: fixed; inset: 0; z-index: 500;
+      background: rgba(0,0,0,.88);
+      display: none; align-items: center; justify-content: center;
+    }
+    .overlay.open { display: flex; }
+    .login-box {
+      background: var(--bg2); border: 1px solid #2a2a2a;
+      border-radius: 16px; padding: 44px 40px; width: 400px;
+    }
+    .login-box h2 { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+    .login-box p  { font-size: 13px; color: var(--g2); margin-bottom: 32px; }
+    .field { margin-bottom: 20px; }
+    .field label { display: block; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--g2); margin-bottom: 8px; }
+    .field input {
+      width: 100%; background: var(--bg); border: 1px solid #333;
+      border-radius: 8px; padding: 12px 14px;
+      color: var(--white); font-family: var(--font); font-size: 14px; outline: none;
+      transition: border-color .2s;
+    }
+    .field input:focus { border-color: var(--red); }
+    .field-err { font-size: 11px; color: var(--red); margin-top: 6px; display: none; }
+    .btn-full {
+      width: 100%; background: var(--red); color: #fff; border: none;
+      padding: 13px; border-radius: 8px;
+      font-family: var(--font); font-size: 13px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      cursor: pointer; transition: background .2s;
+    }
+    .btn-full:hover { background: var(--red-d); }
+    .btn-cancel {
+      width: 100%; margin-top: 10px; background: transparent; color: var(--g2); border: 1px solid #333;
+      padding: 11px; border-radius: 8px;
+      font-family: var(--font); font-size: 13px; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+    }
+    .btn-cancel:hover { color: var(--white); border-color: #555; }
+
+    /* ─── ADMIN PANEL ─── */
+    #admin-panel {
+      position: fixed; inset: 0; z-index: 400;
+      background: var(--bg);
+      display: none; flex-direction: column;
+    }
+    #admin-panel.open { display: flex; }
+
+    .adm-header {
+      height: 60px; background: #0d0d0d; border-bottom: 1px solid #222;
+      display: flex; align-items: center; padding: 0 24px; gap: 16px; flex-shrink: 0;
+    }
+    .adm-header h1 { font-size: 15px; font-weight: 800; flex: 1; }
+    .adm-header-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+      background: rgba(227,6,19,.15); color: var(--red); border: 1px solid rgba(227,6,19,.3);
+      padding: 3px 10px; border-radius: 20px;
+    }
+    .btn-save-all {
+      background: var(--red); color: #fff; border: none;
+      padding: 8px 20px; border-radius: 6px;
+      font-family: var(--font); font-size: 12px; font-weight: 700;
+      letter-spacing: .08em; text-transform: uppercase;
+      cursor: pointer; transition: background .2s;
+    }
+    .btn-save-all:hover { background: var(--red-d); }
+    .btn-close-adm {
+      background: transparent; color: var(--g2); border: 1px solid #333;
+      padding: 7px 14px; border-radius: 6px;
+      font-family: var(--font); font-size: 12px; font-weight: 600;
+      cursor: pointer; transition: all .2s;
+    }
+    .btn-close-adm:hover { color: var(--white); border-color: #555; }
+
+    .adm-body { display: flex; flex: 1; overflow: hidden; }
+
+    /* Sidebar */
+    .adm-sidebar {
+      width: 230px; background: var(--bg2); border-right: 1px solid #1e1e1e;
+      overflow-y: auto; flex-shrink: 0;
+    }
+    .adm-nav-section { padding: 16px 12px 6px; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--g2); }
+    .adm-nav-item {
+      display: flex; align-items: center; gap: 10px;
+      padding: 10px 16px; font-size: 13px; font-weight: 600;
+      cursor: pointer; border-radius: 6px; margin: 2px 6px;
+      color: var(--g1); transition: all .15s;
+    }
+    .adm-nav-item:hover { background: var(--bg3); color: var(--white); }
+    .adm-nav-item.active { background: rgba(227,6,19,.12); color: var(--red); }
+    .adm-nav-item .nav-icon { font-size: 16px; }
+
+    /* Content */
+    .adm-content { flex: 1; overflow-y: auto; padding: 32px 36px; }
+
+    .adm-section { display: none; }
+    .adm-section.active { display: block; }
+
+    .adm-section-title { font-size: 18px; font-weight: 800; margin-bottom: 6px; }
+    .adm-section-sub   { font-size: 13px; color: var(--g2); margin-bottom: 28px; }
+
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-row.full { grid-template-columns: 1fr; }
+    .adm-field { margin-bottom: 0; }
+    .adm-field label { display: block; font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--g2); margin-bottom: 7px; }
+    .adm-field input, .adm-field textarea, .adm-field select {
+      width: 100%; background: var(--bg3); border: 1px solid #2a2a2a;
+      border-radius: 8px; padding: 11px 14px;
+      color: var(--white); font-family: var(--font); font-size: 13px; outline: none;
+      transition: border-color .2s; resize: vertical;
+    }
+    .adm-field input:focus, .adm-field textarea:focus, .adm-field select:focus { border-color: var(--red); }
+    .adm-field select option { background: #1a1a1a; }
+
+    /* Step editor cards */
+    .step-edit-card {
+      background: var(--bg3); border: 1px solid #2a2a2a;
+      border-radius: var(--r); margin-bottom: 14px; overflow: hidden;
+    }
+    .step-edit-head {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 18px; cursor: pointer;
+      background: var(--bg3); transition: background .15s;
+    }
+    .step-edit-head:hover { background: #202020; }
+    .step-edit-num {
+      width: 24px; height: 24px; border-radius: 50%; background: var(--red);
+      font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-edit-title { flex: 1; font-size: 13px; font-weight: 700; }
+    .step-edit-status { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 10px; }
+    .step-edit-status.done        { background: rgba(34,197,94,.15);  color: var(--green); }
+    .step-edit-status.in-progress { background: rgba(227,6,19,.15);   color: var(--red); }
+    .step-edit-status.pending     { background: var(--bg4);           color: var(--g2); }
+    .step-edit-status.review      { background: rgba(245,158,11,.15); color: var(--yellow); }
+    .step-edit-chevron { font-size: 13px; color: var(--g2); transition: transform .2s; }
+    .step-edit-chevron.open { transform: rotate(180deg); }
+
+    .step-edit-body { display: none; padding: 0 18px 18px; border-top: 1px solid #2a2a2a; }
+    .step-edit-body.open { display: block; }
+
+    .sep { height: 1px; background: #2a2a2a; margin: 24px 0; }
+
+    .btn-add-step {
+      display: flex; align-items: center; gap: 8px;
+      background: transparent; color: var(--red); border: 1px dashed rgba(227,6,19,.4);
+      border-radius: 8px; padding: 12px 18px; width: 100%;
+      font-family: var(--font); font-size: 12px; font-weight: 700;
+      letter-spacing: .06em; text-transform: uppercase;
+      cursor: pointer; transition: all .2s; margin-top: 4px;
+    }
+    .btn-add-step:hover { background: rgba(227,6,19,.06); border-color: var(--red); }
+
+    .btn-del-step {
+      background: transparent; color: #e55; border: 1px solid rgba(229,85,85,.3);
+      border-radius: 6px; padding: 6px 12px;
+      font-family: var(--font); font-size: 11px; font-weight: 700;
+      cursor: pointer; transition: all .2s;
+    }
+    .btn-del-step:hover { background: rgba(229,85,85,.1); border-color: #e55; }
+
+    /* File / link manager inside admin */
+    .file-manager { background: var(--bg4); border: 1px solid #333; border-radius: 8px; padding: 14px; margin-top: 8px; }
+    .file-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+    .file-item { display: flex; align-items: center; gap: 8px; background: var(--bg3); border-radius: 6px; padding: 7px 10px; }
+    .file-item span { flex: 1; font-size: 12px; color: var(--g1); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .file-item a { font-size: 12px; color: var(--g2); text-decoration: none; }
+    .file-item a:hover { color: var(--white); }
+    .btn-del-file {
+      background: transparent; border: none; color: #e55; cursor: pointer;
+      font-size: 16px; line-height: 1; padding: 2px; flex-shrink: 0;
+    }
+    .upload-row { display: flex; gap: 8px; }
+    .upload-row input[type=file] { display: none; }
+    .btn-upload {
+      flex: 1; background: var(--bg3); border: 1px solid #333; color: var(--g1);
+      border-radius: 6px; padding: 8px 12px;
+      font-family: var(--font); font-size: 11px; font-weight: 600;
+      cursor: pointer; transition: all .18s; text-align: center;
+    }
+    .btn-upload:hover { border-color: var(--red); color: var(--white); }
+    .link-row { display: flex; gap: 6px; margin-top: 8px; }
+    .link-row input {
+      flex: 1; background: var(--bg3); border: 1px solid #333;
+      border-radius: 6px; padding: 8px 12px;
+      color: var(--white); font-family: var(--font); font-size: 12px; outline: none;
+      transition: border-color .2s;
+    }
+    .link-row input:focus { border-color: var(--red); }
+    .btn-add-link {
+      background: transparent; color: var(--red); border: 1px solid rgba(227,6,19,.4);
+      border-radius: 6px; padding: 8px 14px;
+      font-family: var(--font); font-size: 11px; font-weight: 700;
+      cursor: pointer; transition: all .18s;
+    }
+    .btn-add-link:hover { background: rgba(227,6,19,.1); }
+
+    /* Toast */
+    .toast {
+      position: fixed; bottom: 30px; right: 30px; z-index: 9999;
+      background: var(--bg2); border: 1px solid #2a2a2a; border-left: 3px solid var(--green);
+      border-radius: 10px; padding: 14px 20px;
+      font-size: 13px; font-weight: 600;
+      transform: translateY(100px); opacity: 0; transition: all .3s;
+      pointer-events: none;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+    .toast.error { border-left-color: var(--red); }
+
+    /* Divider */
+    .adm-divider { display: flex; align-items: center; gap: 12px; margin: 28px 0 20px; }
+    .adm-divider span { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--g2); white-space: nowrap; }
+    .adm-divider::before, .adm-divider::after { content: ''; flex: 1; height: 1px; background: #2a2a2a; }
+
+    /* ─── PRIORITY BADGES ─── */
+    .priority { font-size: 9px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; padding: 3px 8px; border-radius: 10px; flex-shrink: 0; }
+    .priority.alta  { background: rgba(239,68,68,.15);  color: #f87171; }
+    .priority.media { background: rgba(245,158,11,.15); color: var(--yellow); }
+    .priority.baixa { background: rgba(34,197,94,.12);  color: #6ee7a0; }
+
+    /* ─── DAYS LEFT PILL ─── */
+    .days-wrap { text-align: right; flex-shrink: 0; }
+    .days-wrap .dl-date { font-size: 13px; font-weight: 700; display: block; }
+    .days-wrap .dl-tag  { font-size: 10px; font-weight: 700; letter-spacing: .06em; margin-top: 2px; display: block; }
+    .days-wrap .dl-tag.ok      { color: var(--g2); }
+    .days-wrap .dl-tag.soon    { color: var(--yellow); }
+    .days-wrap .dl-tag.urgent  { color: #f87171; }
+    .days-wrap .dl-tag.overdue { color: #f87171; }
+    .days-wrap .dl-tag.done-tag{ color: var(--green); }
+
+    /* ─── CHECKLIST PROGRESS in header ─── */
+    .cl-prog { display: flex; align-items: center; gap: 7px; flex-shrink: 0; }
+    .cl-dots  { display: flex; gap: 3px; }
+    .cl-dot   { width: 7px; height: 7px; border-radius: 50%; }
+    .cl-dot.dn { background: var(--green); }
+    .cl-dot.pd { background: var(--g4); }
+    .cl-ratio  { font-size: 11px; font-weight: 600; color: var(--g2); white-space: nowrap; }
+
+    /* ─── AVATAR ─── */
+    .avatar { width: 30px; height: 30px; border-radius: 50%; background: var(--red); color: #fff; font-size: 11px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; letter-spacing: -.02em; }
+
+    /* ─── STEP BODY SECTIONS ─── */
+    .step-sections { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; padding-top: 18px; }
+    @media (max-width: 900px) { .step-sections { grid-template-columns: 1fr; } }
+    .step-section { }
+    .sec-label { font-size: 10px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--g2); margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+
+    /* checklist items */
+    .cl-items { display: flex; flex-direction: column; gap: 5px; }
+    .cl-item  { display: flex; align-items: center; gap: 9px; padding: 9px 11px; background: var(--bg3); border-radius: 7px; cursor: pointer; transition: background .15s; user-select: none; }
+    .cl-item:hover { background: #202020; }
+    .cl-item.checked .cl-text { text-decoration: line-through; color: var(--g2); }
+    .cl-box { width: 18px; height: 18px; border-radius: 5px; flex-shrink: 0; border: 2px solid var(--g3); display: flex; align-items: center; justify-content: center; font-size: 11px; transition: all .15s; }
+    .cl-box.checked { background: var(--green); border-color: var(--green); }
+    .cl-text { font-size: 13px; font-weight: 500; flex: 1; line-height: 1.3; }
+
+    /* notes */
+    .step-note { background: rgba(227,6,19,.05); border: 1px solid rgba(227,6,19,.15); border-radius: 8px; padding: 12px 14px; font-size: 13px; color: var(--g1); line-height: 1.6; font-style: italic; }
+
+    /* effort chip */
+    .effort-chip { display: inline-flex; align-items: center; gap: 5px; background: var(--bg4); border-radius: 6px; padding: 5px 10px; font-size: 11px; font-weight: 600; color: var(--g2); }
+
+    /* attach count chip in header */
+    .attach-count { display: inline-flex; align-items: center; gap: 5px; background: rgba(227,6,19,.1); border: 1px solid rgba(227,6,19,.25); border-radius: 20px; padding: 3px 9px; font-size: 10px; font-weight: 700; color: var(--red); flex-shrink: 0; cursor: pointer; }
+    .attach-count:hover { background: rgba(227,6,19,.18); }
+
+    /* attach grid in body */
+    .attach-grid { display: grid; grid-template-columns: 1fr; gap: 6px; }
+    .attach-row  { display: flex; align-items: center; gap: 10px; background: var(--bg4); border: 1px solid #2a2a2a; border-radius: 8px; padding: 9px 12px; text-decoration: none; transition: all .18s; }
+    .attach-row:hover { border-color: var(--red); background: rgba(227,6,19,.05); }
+    .attach-row-icon { font-size: 18px; flex-shrink: 0; }
+    .attach-row-info { flex: 1; min-width: 0; }
+    .attach-row-name { font-size: 12px; font-weight: 700; color: var(--white); display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .attach-row-type { font-size: 10px; color: var(--g2); text-transform: uppercase; letter-spacing: .06em; }
+    .attach-row-dl   { font-size: 11px; color: var(--g2); flex-shrink: 0; }
+
+    /* responsible card */
+    .resp-card { display: flex; align-items: center; gap: 10px; background: var(--bg3); border-radius: 8px; padding: 10px 12px; }
+    .resp-card-info .resp-name { font-size: 13px; font-weight: 700; }
+    .resp-card-info .resp-role { font-size: 11px; color: var(--g2); margin-top: 1px; }
+
+    /* ─── ADMIN CHECKLIST EDITOR ─── */
+    .adm-cl-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: 8px; }
+    .adm-cl-item { display: flex; align-items: center; gap: 8px; background: var(--bg4); border-radius: 6px; padding: 7px 10px; }
+    .adm-cl-item input[type=checkbox] { accent-color: var(--red); width: 15px; height: 15px; flex-shrink: 0; cursor: pointer; }
+    .adm-cl-item input[type=text] { flex: 1; background: transparent; border: none; color: var(--white); font-family: var(--font); font-size: 12px; outline: none; }
+    .adm-cl-item input[type=text]::placeholder { color: var(--g2); }
+    .btn-add-cl { background: transparent; border: 1px dashed #333; border-radius: 6px; color: var(--g2); font-family: var(--font); font-size: 11px; font-weight: 600; padding: 7px 12px; cursor: pointer; width: 100%; transition: all .15s; }
+    .btn-add-cl:hover { border-color: var(--red); color: var(--red); }
+    .btn-del-cl { background: transparent; border: none; color: #e55; font-size: 16px; cursor: pointer; flex-shrink: 0; line-height: 1; }
+
+    /* responsive */
+    @media (max-width: 900px) {
+      main { padding: 20px 16px 60px; }
+      header { padding: 0 16px; }
+      .hero { padding: 28px 24px; }
+      .hero-title { font-size: 24px; }
+      .stage-tabs { grid-template-columns: 1fr; }
+      .step-right { flex-direction: column; align-items: flex-end; gap: 6px; }
+      .adm-sidebar { width: 180px; }
+      .adm-content { padding: 20px 18px; }
+      .form-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header>
+  <div class="logo">
+    <!-- M Dias Branco logo -->
+    <svg class="logo-client-svg" viewBox="0 0 467 170" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#hdr-clip)"><path d="M366.905 -0.000244141V0.183781C366.721 0.183781 366.484 0.131203 366.353 0.183781V-0.000244141H366.905Z" fill="white"/><path d="M367.635 1.84819C367.164 2.36804 366.667 3.2258 365.96 2.75793C366.065 2.524 366.64 2.21209 366.85 2.08212C367.112 1.95216 367.269 1.74422 367.609 1.82219" fill="white"/><path d="M368.006 3.33296C368.241 3.22859 368.451 3.07203 368.739 3.15031C368.739 3.48953 368.346 3.43734 368.189 3.51562L368.006 3.33296Z" fill="white"/><path d="M365.411 3.33237C365.542 3.09799 365.096 2.83757 365.961 3.15008C366.04 3.48863 365.883 3.43654 365.778 3.51467L365.411 3.33237Z" fill="white"/><path d="M368.216 3.51655C368.216 3.51655 367.848 3.67428 367.848 3.70057V3.51655C367.848 3.51655 367.979 3.35881 368.032 3.33252L368.216 3.51655Z" fill="white"/><path d="M365.227 3.33252L364.859 3.70057C365.016 3.56912 364.543 3.56912 365.227 3.33252Z" fill="white"/><path d="M367.823 3.51465V3.69867C367.823 3.69867 367.692 3.77754 367.639 3.8827H367.455C367.376 3.40949 367.745 3.56723 367.823 3.51465Z" fill="white"/><path d="M0 132.185C4.01146 121.719 8.7046 111.487 12.7947 101.02C14.0008 97.9738 13.9483 94.9536 17.4354 93.6257C20.3457 92.5322 21.5255 92.6624 21.1847 96.0471C20.8176 99.7963 19.5591 103.91 19.1659 107.894C18.6939 112.71 17.2519 129.243 26.612 124.687C32.8782 121.641 39.8524 108.805 42.8151 102.556C44.9126 98.104 48.2424 86.7522 54.0629 86.57C57.7598 86.4398 55.9244 90.189 55.1379 92.0896C53.4337 96.2033 51.3362 100.343 49.5795 104.483C43.6279 118.49 38.1482 132.914 32.9307 147.208C30.6759 153.405 28.7095 160.617 26.1925 166.553C25.1961 168.896 23.5706 170.328 20.8438 169.365C17.0159 168.037 19.9524 161.997 20.8963 159.445C24.7242 149.005 29.1027 138.72 32.9307 128.28C27.3723 130.207 18.589 134.607 13.5813 129.478C11.9557 127.811 11.8508 126.223 10.8808 124.374C10.8021 124.244 10.8283 123.854 10.5137 124.01C10.0418 124.244 7.5772 131.899 5.66323 133.409C3.90658 134.815 1.28472 135.179 0 133.044V132.107L0 132.185Z" fill="white"/><path d="M272.674 108.935C273.775 109.117 272.385 110.94 272.569 111.695C275.348 111.07 278.153 110.341 281.038 110.575C283.056 110.758 284.577 111.226 283.581 113.491C282.689 115.548 277.944 117.996 276.108 119.74C274.666 121.068 271.31 125.182 271.441 127.134C271.52 128.15 273.985 127.212 274.666 127.004C276.79 126.327 278.652 124.947 280.749 124.453C280.854 124.557 280.566 126.353 281.038 126.666C284.629 121.146 289.716 115.991 295.143 112.216C298.919 109.586 301.698 108.206 306.496 108.987C309.196 109.43 313.863 111.643 311.923 115.028C311.058 116.512 309.511 116.486 308.305 117.162C307.282 117.709 303.009 123.958 302.196 125.338C301.829 125.963 301.173 127.004 301.016 127.681C300.99 127.837 300.754 128.15 301.147 128.15C301.462 128.15 303.533 127.317 304.031 127.134C306.758 126.093 309.432 124.531 312.185 123.593C313.863 123.021 315.489 122.786 317.141 122.24C319.92 118.907 322.384 114.897 325.347 111.747C325.74 111.33 326.71 110.263 327.13 110.003C328.677 109.039 332.557 110.237 331.876 112.32C331.771 112.658 330.407 113.934 330.643 114.168C334.235 113.127 338.64 109.924 342.573 110.732C346.978 111.669 342.337 117.501 340.973 119.297C338.876 122.083 336.149 124.557 334.76 127.811C335.494 128.384 342.101 124.427 343.49 124.192C344.382 124.062 345.037 124.583 345.903 124.479C346.532 121.094 348.839 117.709 351.12 115.158C355.42 110.367 359.012 108.388 365.698 109.013C374.061 109.768 372.986 117.735 366.982 121.146C364.413 122.604 360.48 123.307 359.117 120C361.66 117.996 364.465 116.147 364.308 112.502C363.076 112.502 361.896 112.945 360.9 113.648C358.016 115.731 354.528 122.318 353.952 125.754C353.847 126.379 353.427 128.098 354.188 128.202C355.184 128.358 358.592 127.082 359.72 126.666C363.39 125.338 368.32 123.203 371.44 120.964C374.507 118.751 376.08 114.975 378.912 112.502C382.425 109.456 385.807 109.612 390.238 110.315C394.328 110.966 395.902 112.58 396.793 116.59C399.651 116.512 402.509 116.668 405.34 116.59C422.146 116.199 438.953 114.038 455.759 113.622C459.22 113.543 461.894 114.949 464.332 117.319C465.434 118.412 466.43 119.974 466.272 121.563L449.047 121.38C440.552 120.938 432.057 120.834 423.562 120.651C415.382 120.469 405.786 119.714 397.711 120.287C397.291 120.313 395.902 120.495 395.613 120.703C393.883 122.943 392.388 125.416 390.527 127.577C385.938 132.862 380.511 135.987 373.406 132.758C369.893 131.17 370.601 129.452 369.526 126.64C369.447 126.457 369.63 126.301 369.237 126.379C368.372 126.536 364.649 129.452 363.548 130.155C358.304 133.409 350.255 137.106 346.217 130.207C345.85 129.582 345.667 128.853 345.352 128.28C345.247 128.072 345.352 127.968 344.932 128.046C345.247 130.415 342.258 131.248 340.449 132.003C337.277 133.331 330.538 135.622 327.287 134.346C324.141 133.123 326.003 130.623 327.287 128.723C329.647 125.156 333.291 121.719 335.336 118.048C335.494 117.787 336.438 116.173 335.73 116.225C334.13 116.303 331.456 118.594 330.25 119.636C325.688 123.541 321.912 129.139 317.508 132.836C315.489 134.529 313.129 135.075 310.691 133.852C310.376 133.695 309.563 133.201 309.38 132.94C308.724 131.977 310.953 130.155 311.268 129.426C311.373 129.191 311.215 129.087 310.979 129.139C306.522 131.43 300.57 136.065 295.458 132.914C294.829 132.524 293.675 131.144 293.124 131.17C292.364 131.196 289.899 133.331 288.641 133.774C285.049 135.023 280.408 134.19 279.884 129.894C275.217 131.508 271.337 134.607 266.119 134.164C260.639 133.669 264.389 127.16 266.067 124.687C268.295 121.38 271.31 118.647 273.67 115.418C272.621 115.054 271.782 115.028 270.76 115.47C269.685 115.939 265.201 120.755 264.1 121.953C262.92 123.255 260.744 125.546 260.141 127.082C258.804 130.493 259.564 132.263 256.759 135.544C248.553 145.073 229.098 149.005 217.012 148.38C207.861 147.911 191.239 143.615 193.362 131.534C194.437 125.442 199.497 122.656 205.03 121.146C205.79 120.938 210.431 120.209 210.431 119.48C208.071 118.36 205.187 119.063 203.089 117.189C200.179 114.585 203.902 111.981 205.79 110.263C197.715 108.883 197.505 99.8224 202.801 94.9276C212.79 85.7369 241.526 85.4505 251.751 94.3809C255.579 97.7395 256.785 103.207 253.508 107.373C253.036 107.972 249.208 111.356 249.523 111.799C251.437 112.919 253.455 114.481 254.898 116.147C255.501 116.85 257.362 119.792 257.886 120.026C258.044 120.105 258.122 120.131 258.306 120.079C259.119 119.87 262.973 115.704 263.628 114.819C265.044 112.893 266.565 109.039 269.528 109.039C270.445 109.039 271.861 108.909 272.7 109.039M225.873 105.42C229.911 105.602 233.896 106.175 237.829 107.139C239.533 107.555 243.204 109.013 244.751 108.727C246.508 108.388 248.5 103.78 248.369 102.009C247.714 93.0791 230.095 90.9701 223.356 91.3607C215.884 91.8033 200.73 96.4898 208.307 106.305C208.805 106.956 209.408 107.998 210.3 107.972C211.637 107.92 218.034 106.331 219.188 105.681C221.075 104.613 220.656 101.515 223.409 100.656C224.169 100.421 227.473 99.9786 227.709 100.89C227.84 101.385 225.585 105.16 225.873 105.394M237.96 112.632C238.354 112.111 232.612 110.601 232.192 110.497C230.383 110.081 225.559 108.987 223.907 109.3C223.383 109.404 222.413 111.174 222.098 111.747C221.914 112.085 220.656 114.481 220.839 114.637C226.503 114.351 232.533 114.325 237.96 112.606M249.496 122.031C249.864 121.693 247.425 118.803 247.084 118.438C246.219 117.501 243.676 115.028 242.496 114.845C240.949 114.637 239.638 115.418 238.222 115.731C231.904 117.136 225.349 117.683 218.978 118.881C219.188 119.323 220.132 119.402 220.577 119.428C225.034 119.818 229.675 119.506 234.342 120C239.402 120.521 244.436 121.458 249.496 122.031ZM299.548 118.542H294.435C293.151 120.235 290.66 124.322 291.001 126.405C291.079 126.978 291.813 126.614 292.18 126.457C293.832 125.728 298.63 120.86 299.391 119.193C299.495 118.985 299.627 118.829 299.574 118.542M386.437 120.938L381.036 121.224C380.511 121.537 378.361 125.989 378.099 126.796C377.837 127.577 377.103 129.452 378.466 129.217C379.856 128.983 384.523 124.166 385.44 122.838C385.65 122.552 386.646 121.172 386.41 120.938M232.533 124.505C225.559 124.661 208.071 125.156 203.089 130.181C199.104 134.216 205.528 137.861 208.753 139.137C216.382 142.105 226.031 142.079 233.87 139.866C239.324 138.33 247.714 134.372 250.571 129.295C251.07 128.41 252.249 125.39 251.174 124.713C251.096 124.661 249.496 124.453 249.208 124.453C244.043 124.088 237.751 124.375 232.533 124.505Z" fill="white"/><path d="M89.4589 88.4968C100.89 87.8199 111.483 89.9288 119.086 98.8852C141.424 125.156 102.332 152.129 77.0312 147.078C67.9858 145.282 58.8879 138.096 61.3262 127.968C63.3451 119.506 73.4393 120.573 80.125 119.298L88.2528 104.639C89.4851 102.166 91.8186 100.76 94.6502 100.994C97.6653 101.255 96.6428 103.051 95.83 104.952C94.0471 109.039 91.2155 112.919 89.3802 117.006C89.1443 117.501 88.5937 118.647 88.4888 119.089C88.4363 119.298 88.3577 119.402 88.5937 119.558L116.412 122.786C117.12 122.682 117.959 120.001 118.09 119.272C121.551 102.582 98.8452 91.1264 84.792 92.1158C78.8403 92.5324 71.0009 96.6721 73.8588 103.676C74.488 105.238 76.8477 107.79 76.8739 109.196C76.9263 110.862 73.9899 111.252 72.7314 111.07C67.4352 110.393 64.1054 105.082 66.1767 100.057C69.4278 92.1418 81.6982 88.9394 89.4851 88.4707M115.179 124.817C107.497 124.817 99.8677 124.218 92.1856 124.453C87.1779 124.583 73.9112 125.078 70.2406 128.332C67.0681 131.144 70.7912 134.008 73.3082 135.44C83.8743 141.428 100.392 139.397 109.673 131.821C111.823 130.077 114.655 127.603 115.179 124.817Z" fill="white"/><path d="M366.905 0.182153C366.774 0.754948 366.145 1.27567 365.699 1.66621C358.043 8.38354 347.791 14.0073 340.503 21.0631C340.398 21.1673 339.611 21.1413 340.031 21.7922C340.136 21.3495 340.424 21.5058 340.608 21.3495C340.712 21.2714 340.66 21.0631 340.66 21.0371C348.027 15.5695 355.814 9.8676 363.47 4.53019C363.837 4.26983 364.781 3.72307 364.86 3.671L365.227 3.30649C365.227 3.30649 365.384 3.33253 365.41 3.30649L365.777 3.48874C365.515 3.69703 365.358 3.64496 365.07 3.72307C358.41 9.55517 350.728 14.8405 343.649 20.4122C342.967 20.933 341.001 22.3129 340.66 22.8857C339.244 23.3283 340.162 24.0313 340.608 23.3804C340.712 23.2241 340.608 22.9377 340.66 22.8857C341.682 22.5732 342.259 22.1827 343.203 21.5318C351.357 15.8038 358.987 9.03444 367.455 3.87929H367.639C367.56 4.00947 367.718 4.26983 367.377 4.63433C364.729 7.44624 358.331 11.7682 354.975 14.2937C323.172 38.3251 284.998 60.4298 247.505 74.3591C246.011 74.9059 241.763 76.0515 240.767 76.7024C240.688 76.7545 240.531 76.9367 240.583 76.9888C246.115 75.8692 252.591 73.2917 258.255 74.6716C259.906 75.0621 261.558 75.9734 263.236 76.3639C264.783 76.7284 266.54 76.9367 268.113 76.9627L260.064 81.8055C256.813 83.0552 253.299 83.9665 249.786 84.1748C242.183 84.6174 234.868 82.0398 227.29 81.9356C226.347 81.7013 228.418 80.9983 228.628 80.8942C229.047 80.6859 229.021 80.6078 228.575 80.6599C226.399 80.8942 222.623 82.3522 220.29 82.9771C184.37 92.298 136.574 97.1928 105.688 72.823C104.351 71.7816 102.489 70.2715 101.388 69.0478C101.336 68.6572 101.388 68.6312 101.755 68.6833C109.07 73.552 114.419 77.6918 122.914 80.8161C158.807 94.0685 204.323 85.1381 239.351 72.7449C282.114 57.6179 321.73 34.5499 357.387 7.08173C359.092 5.77992 364.86 0.572695 366.328 0.182153C366.485 0.130081 366.721 0.208189 366.879 0.182153M339.742 21.7922C339.48 21.662 339.244 21.8963 339.375 21.9744C339.637 22.1046 339.873 21.8442 339.742 21.7922ZM240.374 76.9888C240.111 76.8586 239.875 77.0929 240.006 77.171C240.269 77.3012 240.505 77.0669 240.374 76.9888ZM239.456 77.171C238.46 77.3012 237.437 77.874 236.467 78.1864C236.467 78.6291 239.194 77.4835 239.456 77.3533C239.561 77.3012 239.823 77.4574 239.823 77.2491C239.823 77.0929 239.561 77.145 239.456 77.145M236.283 78.2906C236.021 78.1604 235.785 78.4208 235.916 78.4728C236.179 78.603 236.415 78.3687 236.283 78.2906ZM235.733 78.4728C235.392 78.5249 234.317 78.4208 234.422 79.0196L235.733 78.4728ZM234.055 79.0196C232.823 79.2539 231.354 79.6184 230.174 80.0871C229.886 80.1912 229.676 79.9829 229.781 80.5037C231.013 80.2173 232.351 79.8007 233.557 79.3581C233.766 79.28 234.107 79.306 234.081 79.0456M229.598 80.5037L229.047 80.3214C228.942 80.8161 229.152 80.712 229.598 80.6859V80.5037Z" fill="white"/><path d="M156.474 127.759C156.946 128.124 160.721 126.249 161.456 125.963C161.691 125.859 162.373 125.755 162.426 125.729C162.635 125.494 162.216 123.411 162.557 123.151C163.002 122.812 165.886 121.745 166.516 121.589C167.46 121.381 170.448 121.25 171.13 121.927C171.34 122.11 171.523 124.531 171.681 125.182C172.127 127.056 173.333 128.905 175.456 128.905C174.932 123.646 170.029 120.651 170.842 115.002C171.759 108.805 182.666 108.883 187.15 110.341C194.019 112.58 190.689 122.005 183.715 121.328C182.902 121.25 181.565 120.86 181.408 119.896C181.093 117.944 187.517 113.882 183.007 112.398C178.471 110.914 178.419 115.835 179.048 118.907C179.73 122.188 184.213 129.217 182.824 132.055C181.749 134.268 175.404 133.8 173.385 133.201C170.134 132.238 167.696 129.842 164.733 128.306C159.122 131.092 152.462 137.471 147.035 130.519C143.732 133.123 139.196 135.232 135.368 132.316C133.061 130.571 133.611 129.296 134.712 126.926C137.439 121.146 149.867 110.237 156.369 109.638C158.886 109.404 162.583 109.794 164.628 111.409C167.145 113.387 166.385 116.356 163.527 117.475C163.133 117.631 162.583 117.579 162.163 117.788C160.905 118.412 157.077 125.989 156.448 127.707M154.979 118.543H149.683C148.503 120.131 147.271 122.162 146.668 124.036C146.38 124.869 145.855 126.093 146.537 126.848C147.507 127.082 152.331 122.344 153.118 121.407C153.852 120.547 154.508 119.584 154.979 118.543Z" fill="white"/><path d="M348.866 29.3688V30.0718C338.457 35.5394 328.232 41.3194 317.928 46.9432C315.673 48.1669 311.399 49.9113 309.643 51.4475C309.433 51.6297 309.171 51.7339 309.249 52.0723C310.298 52.2546 311.242 52.593 312.317 52.4368C325.82 45.3029 339.086 37.6743 352.405 30.1759C352.746 30.0978 354.608 29.1866 354.267 30.1759C354.215 30.3061 352.301 31.3996 351.96 31.5819C339.847 38.6897 327.131 44.8603 315.07 52.0202C314.729 52.2285 314.257 52.4368 314.074 52.8013C315.935 52.9836 317.797 52.9576 319.606 52.4889C331.588 46.7349 342.967 38.9241 354.818 32.9618C355.63 32.5452 356.469 32.0505 357.413 32.1286L356.758 33.0399L319.396 53.5824C313.209 59.4926 305.658 63.0596 297.032 63.7105C293.099 63.9969 288.773 63.5803 284.945 63.8927C284.735 63.8927 283.083 64.1791 283.372 64.4395C287.173 65.6111 291.159 65.9756 295.091 66.4703C290.477 70.558 284.709 73.3439 278.574 74.3593C270.498 75.7131 262.266 73.8646 254.164 73.6823L255.763 72.7971C261.086 70.6621 266.382 68.3189 271.888 66.6265C274.3 65.8715 276.948 65.4809 279.282 64.5436C286.728 61.6016 293.597 56.2641 301.463 53.5043C303.455 52.8013 305.631 52.4629 307.493 51.7339C310.089 50.7184 313.182 48.8438 315.673 47.49C325.348 42.2307 334.865 36.2423 344.619 31.1913C345.169 30.9049 348.551 29.0824 348.84 29.3688" fill="white"/><path d="M344.959 1.66598C345.037 2.03049 344.775 2.1086 344.565 2.29085C342.782 3.90509 340.292 5.54537 338.325 6.97736C327.208 15.0746 315.463 22.4949 304.792 31.1129C304.293 31.7638 302.72 34.081 304.529 33.2478L341.026 6.87321C341.55 6.48267 342.363 5.90988 342.94 6.56078C342.94 6.76907 340.921 8.22709 340.58 8.46142C328.441 17.2616 316.013 25.6453 303.874 34.4455C302.615 35.6432 300.859 37.2574 300.964 39.132C314.519 29.9152 327.471 19.8392 340.868 10.4141L341.812 10.336L341.157 11.2473C321.126 24.7861 302.012 41.1107 280.723 52.6448C280.067 53.0093 275.689 55.4306 275.4 55.1963C276.397 53.504 277.76 52.0459 278.887 50.4577C282.348 45.5629 285.232 40.1995 289.794 36.1899C294.671 31.894 300.623 29.6288 306.863 28.0146C312.972 24.1873 318.845 19.8653 324.744 15.6474C330.329 11.6639 336.306 6.63889 341.996 3.0459C342.389 2.78554 344.696 1.40562 344.959 1.63995" fill="white"/><path d="M259.357 54.1029C258.282 55.3787 256.945 56.4462 255.922 57.8001C254.69 59.4404 253.903 61.3931 252.566 62.9552C248.292 67.9281 234.213 73.4218 227.763 75.4526C226.741 75.765 225.613 76.2076 224.564 76.2337C231.696 69.5424 236.913 61.0546 246.221 56.993C250.311 55.1965 254.873 54.155 259.383 54.0769" fill="white"/><path d="M282.978 40.0696C283.241 40.2779 280.96 43.0637 280.724 43.4543C277.656 48.4532 278.311 50.5621 273.015 54.6238C268.217 58.2949 261.374 62.2263 255.947 65.0122C255.396 65.2986 252.434 66.8868 252.093 66.6525C255.082 62.6169 257.782 58.347 260.771 54.3114C263.76 50.2758 266.225 47.5159 270.525 44.8082C274.195 42.4909 278.574 40.4341 282.978 40.0956" fill="white"/><path d="M136.337 110.263C140.821 110.002 139.326 112.919 138.199 115.444C136.573 119.063 134.581 122.63 132.85 126.197C131.985 128.02 131.067 130.936 130.071 132.498C129.075 134.086 127.187 134.008 125.483 133.852C122.048 133.539 122.415 132.55 123.438 129.972C125.247 125.442 127.947 120.052 130.386 115.809C131.906 113.153 132.85 110.471 136.337 110.263Z" fill="white"/><path d="M48.5042 128.723C50.5231 128.41 55.6619 128.723 55.2424 131.717C54.7705 134.997 47.7177 135.206 46.0397 132.732C44.7812 130.857 46.5903 129.009 48.5042 128.723Z" fill="white"/><path d="M140.428 102.713C141.975 102.556 144.57 102.817 145.567 104.144C147.297 106.436 143.627 107.529 141.87 107.659C136.18 108.076 133.795 103.337 140.428 102.713Z" fill="white"/><path d="M101.019 68.318C101.019 68.318 100.443 68.266 100.47 67.9541C101.15 67.7462 100.993 68.292 101.019 68.318C101.124 68.396 101.412 68.448 101.752 68.6819C101.36 68.6299 101.333 68.6819 101.386 69.0458C100.993 68.6039 101.098 68.422 101.019 68.318Z" fill="white"/><path d="M340.474 21.0369H340.657C340.657 21.0369 340.71 21.2708 340.605 21.3488C340.422 21.4787 340.134 21.3488 340.029 21.7907C339.61 21.1148 340.396 21.1668 340.5 21.0629" fill="white"/><path d="M239.455 77.1709V77.3532C239.193 77.4833 236.492 78.6289 236.466 78.1863C237.41 77.8739 238.458 77.3011 239.455 77.1709Z" fill="white"/><path d="M340.657 22.8855C340.657 22.8855 340.736 23.2234 340.605 23.3794C340.16 24.0292 339.218 23.3274 340.657 22.8855Z" fill="white"/><path d="M235.731 78.4727L234.422 79.0185C234.291 78.3947 235.39 78.5246 235.731 78.4727Z" fill="white"/><path d="M229.598 80.5053V80.6893C229.151 80.6893 228.941 80.8208 229.046 80.3213L229.598 80.5053Z" fill="white"/><path d="M236.284 78.2908C236.284 78.2908 236.179 78.6063 235.916 78.4748C235.785 78.4222 236.022 78.1593 236.284 78.2908Z" fill="white"/><path d="M240.374 76.989C240.374 76.989 240.269 77.3045 240.006 77.1731C239.875 77.1205 240.111 76.8576 240.374 76.989Z" fill="white"/><path d="M339.743 21.7925C339.743 21.7925 339.638 22.108 339.375 21.9765C339.244 21.9239 339.48 21.6611 339.743 21.7925Z" fill="white"/></g><defs><clipPath id="hdr-clip"><rect width="466.273" height="169.704" fill="white"/></clipPath></defs></svg>
+    <div class="logo-sep"></div>
+    <!-- Firma Produções logo -->
+    <svg class="logo-firma-svg" viewBox="0 0 2913.293 893.905" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><style>.fst0{fill:#b34238}.fst1{fill:#fff}</style></defs><polygon class="fst1" points="0 627.267 123.323 627.267 123.323 378.844 324.723 378.844 324.723 254.633 123.323 254.633 123.323 129.535 399.25 129.535 399.25 6.211 0 6.211 0 627.267"/><polygon class="fst1" points="528.537 199.589 527.891 627.267 650.327 627.267 649.791 199.589 528.537 199.589"/><path class="fst1" d="M1240.324,302.987c20.101-31.053,30.165-66.098,30.165-105.137,0-26.617-5.184-51.458-15.526-74.526-10.355-23.069-24.26-43.321-41.7-60.775-17.453-17.438-37.707-31.191-60.774-41.255-23.067-10.051-47.619-15.083-73.639-15.083h-251.084v621.056h122.437v-236.889h74.526l168.573,236.889h150.829l-182.769-255.52c32.523-14.779,58.848-37.707,78.963-68.76ZM1124.985,247.093c-14.793,13.903-37.86,20.849-69.205,20.849h-105.579v-138.406h105.579c31.345,0,54.412,6.654,69.205,19.963,14.777,13.308,22.181,29.43,22.181,48.352s-7.404,35.35-22.181,49.242Z"/><polygon class="fst1" points="1816.117 275.927 1538.418 0 1470.1 0 1470.1 627.267 1593.424 627.267 1593.424 226.242 1816.117 448.048 2039.699 226.242 2039.699 627.267 2162.134 627.267 2162.134 0 2094.706 0 1816.117 275.927"/><path class="fst1" d="M2442.051,570.929c9.164-20.407,17.591-39.482,25.285-57.226h236.891l50.57,113.564h135.746L2611.068,0h-52.347l-275.926,627.267h134.857c7.099-17.148,15.22-35.932,24.398-56.338ZM2585.338,246.648l63.879,143.73h-127.761l63.882-143.73Z"/><circle class="fst0" cx="589.164" cy="67.984" r="60.627"/><path class="fst1" d="M1719.657,709.734h-67.769v181.066h20.433v-63.89h43.974c38.542,0,71.134-20.176,71.134-59.235v-.517c0-35.697-26.899-57.424-67.772-57.424ZM1766.736,768.451c0,23.798-19.659,39.835-49.664,39.835h-44.751v-79.671h45.785c29.23,0,48.63,13.453,48.63,39.319v.517Z"/><path class="fst1" d="M2114.148,764.053v-.517c0-14.227-5.175-26.9-13.97-35.694-11.382-11.382-29.23-18.108-51.475-18.108h-77.857v181.066h20.433v-70.357h51.734l52.508,70.357h25.089l-55.613-73.979c28.454-5.173,49.149-22.761,49.149-52.768ZM1991.28,802.078v-73.462h55.87c29.23,0,46.302,13.453,46.302,35.697v.517c0,23.281-19.399,37.248-46.559,37.248h-55.613Z"/><path class="fst1" d="M2389.176,706.629c-55.096,0-92.604,43.717-92.604,93.638v.517c0,49.924,36.991,93.121,92.084,93.121s92.604-43.714,92.604-93.638v-.517c0-49.924-36.991-93.121-92.084-93.121ZM2460.049,800.784c0,41.129-29.487,74.239-70.874,74.239s-71.394-33.626-71.394-74.755v-.517c0-41.126,29.488-74.236,70.874-74.236s71.394,33.626,71.394,74.753v.517Z"/><rect class="fst1" x="2889.498" y="863.64" width="23.795" height="27.159"/><path class="fst1" d="M2785.624,774.513l-55.877-32.261-55.877-32.26c-18.939-10.935-42.614,2.734-42.614,24.603v129.042c0,21.869,23.674,35.538,42.614,24.603l55.877-32.261,55.877-32.26c18.939-10.935,18.939-38.271,0-49.207ZM2757.578,815.735l-38.231,22.073-38.232,22.073c-12.958,7.482-29.157-1.87-29.157-16.833v-88.292c0-14.964,16.198-24.315,29.157-16.834l38.232,22.073,38.231,22.073c12.958,7.482,12.958,26.186,0,33.667Z"/></svg>
+  </div>
+  <div class="header-right">
+    <span class="last-update" id="last-update-lbl"></span>
+    <button id="btn-open-admin" onclick="openAdmin()">⚙ Painel Admin</button>
+    <button id="btn-open-login" onclick="openLogin()">🔒 Admin</button>
+  </div>
+</header>
+
+<!-- ═══ MAIN CLIENT VIEW ═══ -->
+<main>
+
+  <!-- HERO -->
+  <div class="hero">
+    <!-- M Dias Branco hero logo -->
+    <svg class="hero-logo" viewBox="0 0 467 170" fill="none" xmlns="http://www.w3.org/2000/svg"><g clip-path="url(#hero-clip)"><path d="M366.905 -0.000244141V0.183781C366.721 0.183781 366.484 0.131203 366.353 0.183781V-0.000244141H366.905Z" fill="white"/><path d="M367.635 1.84819C367.164 2.36804 366.667 3.2258 365.96 2.75793C366.065 2.524 366.64 2.21209 366.85 2.08212C367.112 1.95216 367.269 1.74422 367.609 1.82219" fill="white"/><path d="M368.006 3.33296C368.241 3.22859 368.451 3.07203 368.739 3.15031C368.739 3.48953 368.346 3.43734 368.189 3.51562L368.006 3.33296Z" fill="white"/><path d="M365.411 3.33237C365.542 3.09799 365.096 2.83757 365.961 3.15008C366.04 3.48863 365.883 3.43654 365.778 3.51467L365.411 3.33237Z" fill="white"/><path d="M368.216 3.51655C368.216 3.51655 367.848 3.67428 367.848 3.70057V3.51655C367.848 3.51655 367.979 3.35881 368.032 3.33252L368.216 3.51655Z" fill="white"/><path d="M365.227 3.33252L364.859 3.70057C365.016 3.56912 364.543 3.56912 365.227 3.33252Z" fill="white"/><path d="M367.823 3.51465V3.69867C367.823 3.69867 367.692 3.77754 367.639 3.8827H367.455C367.376 3.40949 367.745 3.56723 367.823 3.51465Z" fill="white"/><path d="M0 132.185C4.01146 121.719 8.7046 111.487 12.7947 101.02C14.0008 97.9738 13.9483 94.9536 17.4354 93.6257C20.3457 92.5322 21.5255 92.6624 21.1847 96.0471C20.8176 99.7963 19.5591 103.91 19.1659 107.894C18.6939 112.71 17.2519 129.243 26.612 124.687C32.8782 121.641 39.8524 108.805 42.8151 102.556C44.9126 98.104 48.2424 86.7522 54.0629 86.57C57.7598 86.4398 55.9244 90.189 55.1379 92.0896C53.4337 96.2033 51.3362 100.343 49.5795 104.483C43.6279 118.49 38.1482 132.914 32.9307 147.208C30.6759 153.405 28.7095 160.617 26.1925 166.553C25.1961 168.896 23.5706 170.328 20.8438 169.365C17.0159 168.037 19.9524 161.997 20.8963 159.445C24.7242 149.005 29.1027 138.72 32.9307 128.28C27.3723 130.207 18.589 134.607 13.5813 129.478C11.9557 127.811 11.8508 126.223 10.8808 124.374C10.8021 124.244 10.8283 123.854 10.5137 124.01C10.0418 124.244 7.5772 131.899 5.66323 133.409C3.90658 134.815 1.28472 135.179 0 133.044V132.107L0 132.185Z" fill="white"/><path d="M272.674 108.935C273.775 109.117 272.385 110.94 272.569 111.695C275.348 111.07 278.153 110.341 281.038 110.575C283.056 110.758 284.577 111.226 283.581 113.491C282.689 115.548 277.944 117.996 276.108 119.74C274.666 121.068 271.31 125.182 271.441 127.134C271.52 128.15 273.985 127.212 274.666 127.004C276.79 126.327 278.652 124.947 280.749 124.453C280.854 124.557 280.566 126.353 281.038 126.666C284.629 121.146 289.716 115.991 295.143 112.216C298.919 109.586 301.698 108.206 306.496 108.987C309.196 109.43 313.863 111.643 311.923 115.028C311.058 116.512 309.511 116.486 308.305 117.162C307.282 117.709 303.009 123.958 302.196 125.338C301.829 125.963 301.173 127.004 301.016 127.681C300.99 127.837 300.754 128.15 301.147 128.15C301.462 128.15 303.533 127.317 304.031 127.134C306.758 126.093 309.432 124.531 312.185 123.593C313.863 123.021 315.489 122.786 317.141 122.24C319.92 118.907 322.384 114.897 325.347 111.747C325.74 111.33 326.71 110.263 327.13 110.003C328.677 109.039 332.557 110.237 331.876 112.32C331.771 112.658 330.407 113.934 330.643 114.168C334.235 113.127 338.64 109.924 342.573 110.732C346.978 111.669 342.337 117.501 340.973 119.297C338.876 122.083 336.149 124.557 334.76 127.811C335.494 128.384 342.101 124.427 343.49 124.192C344.382 124.062 345.037 124.583 345.903 124.479C346.532 121.094 348.839 117.709 351.12 115.158C355.42 110.367 359.012 108.388 365.698 109.013C374.061 109.768 372.986 117.735 366.982 121.146C364.413 122.604 360.48 123.307 359.117 120C361.66 117.996 364.465 116.147 364.308 112.502C363.076 112.502 361.896 112.945 360.9 113.648C358.016 115.731 354.528 122.318 353.952 125.754C353.847 126.379 353.427 128.098 354.188 128.202C355.184 128.358 358.592 127.082 359.72 126.666C363.39 125.338 368.32 123.203 371.44 120.964C374.507 118.751 376.08 114.975 378.912 112.502C382.425 109.456 385.807 109.612 390.238 110.315C394.328 110.966 395.902 112.58 396.793 116.59C399.651 116.512 402.509 116.668 405.34 116.59C422.146 116.199 438.953 114.038 455.759 113.622C459.22 113.543 461.894 114.949 464.332 117.319C465.434 118.412 466.43 119.974 466.272 121.563L449.047 121.38C440.552 120.938 432.057 120.834 423.562 120.651C415.382 120.469 405.786 119.714 397.711 120.287C397.291 120.313 395.902 120.495 395.613 120.703C393.883 122.943 392.388 125.416 390.527 127.577C385.938 132.862 380.511 135.987 373.406 132.758C369.893 131.17 370.601 129.452 369.526 126.64C369.447 126.457 369.63 126.301 369.237 126.379C368.372 126.536 364.649 129.452 363.548 130.155C358.304 133.409 350.255 137.106 346.217 130.207C345.85 129.582 345.667 128.853 345.352 128.28C345.247 128.072 345.352 127.968 344.932 128.046C345.247 130.415 342.258 131.248 340.449 132.003C337.277 133.331 330.538 135.622 327.287 134.346C324.141 133.123 326.003 130.623 327.287 128.723C329.647 125.156 333.291 121.719 335.336 118.048C335.494 117.787 336.438 116.173 335.73 116.225C334.13 116.303 331.456 118.594 330.25 119.636C325.688 123.541 321.912 129.139 317.508 132.836C315.489 134.529 313.129 135.075 310.691 133.852C310.376 133.695 309.563 133.201 309.38 132.94C308.724 131.977 310.953 130.155 311.268 129.426C311.373 129.191 311.215 129.087 310.979 129.139C306.522 131.43 300.57 136.065 295.458 132.914C294.829 132.524 293.675 131.144 293.124 131.17C292.364 131.196 289.899 133.331 288.641 133.774C285.049 135.023 280.408 134.19 279.884 129.894C275.217 131.508 271.337 134.607 266.119 134.164C260.639 133.669 264.389 127.16 266.067 124.687C268.295 121.38 271.31 118.647 273.67 115.418C272.621 115.054 271.782 115.028 270.76 115.47C269.685 115.939 265.201 120.755 264.1 121.953C262.92 123.255 260.744 125.546 260.141 127.082C258.804 130.493 259.564 132.263 256.759 135.544C248.553 145.073 229.098 149.005 217.012 148.38C207.861 147.911 191.239 143.615 193.362 131.534C194.437 125.442 199.497 122.656 205.03 121.146C205.79 120.938 210.431 120.209 210.431 119.48C208.071 118.36 205.187 119.063 203.089 117.189C200.179 114.585 203.902 111.981 205.79 110.263C197.715 108.883 197.505 99.8224 202.801 94.9276C212.79 85.7369 241.526 85.4505 251.751 94.3809C255.579 97.7395 256.785 103.207 253.508 107.373C253.036 107.972 249.208 111.356 249.523 111.799C251.437 112.919 253.455 114.481 254.898 116.147C255.501 116.85 257.362 119.792 257.886 120.026C258.044 120.105 258.122 120.131 258.306 120.079C259.119 119.87 262.973 115.704 263.628 114.819C265.044 112.893 266.565 109.039 269.528 109.039C270.445 109.039 271.861 108.909 272.7 109.039M225.873 105.42C229.911 105.602 233.896 106.175 237.829 107.139C239.533 107.555 243.204 109.013 244.751 108.727C246.508 108.388 248.5 103.78 248.369 102.009C247.714 93.0791 230.095 90.9701 223.356 91.3607C215.884 91.8033 200.73 96.4898 208.307 106.305C208.805 106.956 209.408 107.998 210.3 107.972C211.637 107.92 218.034 106.331 219.188 105.681C221.075 104.613 220.656 101.515 223.409 100.656C224.169 100.421 227.473 99.9786 227.709 100.89C227.84 101.385 225.585 105.16 225.873 105.394M237.96 112.632C238.354 112.111 232.612 110.601 232.192 110.497C230.383 110.081 225.559 108.987 223.907 109.3C223.383 109.404 222.413 111.174 222.098 111.747C221.914 112.085 220.656 114.481 220.839 114.637C226.503 114.351 232.533 114.325 237.96 112.606M249.496 122.031C249.864 121.693 247.425 118.803 247.084 118.438C246.219 117.501 243.676 115.028 242.496 114.845C240.949 114.637 239.638 115.418 238.222 115.731C231.904 117.136 225.349 117.683 218.978 118.881C219.188 119.323 220.132 119.402 220.577 119.428C225.034 119.818 229.675 119.506 234.342 120C239.402 120.521 244.436 121.458 249.496 122.031ZM299.548 118.542H294.435C293.151 120.235 290.66 124.322 291.001 126.405C291.079 126.978 291.813 126.614 292.18 126.457C293.832 125.728 298.63 120.86 299.391 119.193C299.495 118.985 299.627 118.829 299.574 118.542M386.437 120.938L381.036 121.224C380.511 121.537 378.361 125.989 378.099 126.796C377.837 127.577 377.103 129.452 378.466 129.217C379.856 128.983 384.523 124.166 385.44 122.838C385.65 122.552 386.646 121.172 386.41 120.938M232.533 124.505C225.559 124.661 208.071 125.156 203.089 130.181C199.104 134.216 205.528 137.861 208.753 139.137C216.382 142.105 226.031 142.079 233.87 139.866C239.324 138.33 247.714 134.372 250.571 129.295C251.07 128.41 252.249 125.39 251.174 124.713C251.096 124.661 249.496 124.453 249.208 124.453C244.043 124.088 237.751 124.375 232.533 124.505Z" fill="white"/><path d="M89.4589 88.4968C100.89 87.8199 111.483 89.9288 119.086 98.8852C141.424 125.156 102.332 152.129 77.0312 147.078C67.9858 145.282 58.8879 138.096 61.3262 127.968C63.3451 119.506 73.4393 120.573 80.125 119.298L88.2528 104.639C89.4851 102.166 91.8186 100.76 94.6502 100.994C97.6653 101.255 96.6428 103.051 95.83 104.952C94.0471 109.039 91.2155 112.919 89.3802 117.006C89.1443 117.501 88.5937 118.647 88.4888 119.089C88.4363 119.298 88.3577 119.402 88.5937 119.558L116.412 122.786C117.12 122.682 117.959 120.001 118.09 119.272C121.551 102.582 98.8452 91.1264 84.792 92.1158C78.8403 92.5324 71.0009 96.6721 73.8588 103.676C74.488 105.238 76.8477 107.79 76.8739 109.196C76.9263 110.862 73.9899 111.252 72.7314 111.07C67.4352 110.393 64.1054 105.082 66.1767 100.057C69.4278 92.1418 81.6982 88.9394 89.4851 88.4707M115.179 124.817C107.497 124.817 99.8677 124.218 92.1856 124.453C87.1779 124.583 73.9112 125.078 70.2406 128.332C67.0681 131.144 70.7912 134.008 73.3082 135.44C83.8743 141.428 100.392 139.397 109.673 131.821C111.823 130.077 114.655 127.603 115.179 124.817Z" fill="white"/><path d="M366.905 0.182153C366.774 0.754948 366.145 1.27567 365.699 1.66621C358.043 8.38354 347.791 14.0073 340.503 21.0631C340.398 21.1673 339.611 21.1413 340.031 21.7922C340.136 21.3495 340.424 21.5058 340.608 21.3495C340.712 21.2714 340.66 21.0631 340.66 21.0371C348.027 15.5695 355.814 9.8676 363.47 4.53019C363.837 4.26983 364.781 3.72307 364.86 3.671L365.227 3.30649C365.227 3.30649 365.384 3.33253 365.41 3.30649L365.777 3.48874C365.515 3.69703 365.358 3.64496 365.07 3.72307C358.41 9.55517 350.728 14.8405 343.649 20.4122C342.967 20.933 341.001 22.3129 340.66 22.8857C339.244 23.3283 340.162 24.0313 340.608 23.3804C340.712 23.2241 340.608 22.9377 340.66 22.8857C341.682 22.5732 342.259 22.1827 343.203 21.5318C351.357 15.8038 358.987 9.03444 367.455 3.87929H367.639C367.56 4.00947 367.718 4.26983 367.377 4.63433C364.729 7.44624 358.331 11.7682 354.975 14.2937C323.172 38.3251 284.998 60.4298 247.505 74.3591C246.011 74.9059 241.763 76.0515 240.767 76.7024C240.688 76.7545 240.531 76.9367 240.583 76.9888C246.115 75.8692 252.591 73.2917 258.255 74.6716C259.906 75.0621 261.558 75.9734 263.236 76.3639C264.783 76.7284 266.54 76.9367 268.113 76.9627L260.064 81.8055C256.813 83.0552 253.299 83.9665 249.786 84.1748C242.183 84.6174 234.868 82.0398 227.29 81.9356C226.347 81.7013 228.418 80.9983 228.628 80.8942C229.047 80.6859 229.021 80.6078 228.575 80.6599C226.399 80.8942 222.623 82.3522 220.29 82.9771C184.37 92.298 136.574 97.1928 105.688 72.823C104.351 71.7816 102.489 70.2715 101.388 69.0478C101.336 68.6572 101.388 68.6312 101.755 68.6833C109.07 73.552 114.419 77.6918 122.914 80.8161C158.807 94.0685 204.323 85.1381 239.351 72.7449C282.114 57.6179 321.73 34.5499 357.387 7.08173C359.092 5.77992 364.86 0.572695 366.328 0.182153C366.485 0.130081 366.721 0.208189 366.879 0.182153M339.742 21.7922C339.48 21.662 339.244 21.8963 339.375 21.9744C339.637 22.1046 339.873 21.8442 339.742 21.7922ZM240.374 76.9888C240.111 76.8586 239.875 77.0929 240.006 77.171C240.269 77.3012 240.505 77.0669 240.374 76.9888ZM239.456 77.171C238.46 77.3012 237.437 77.874 236.467 78.1864C236.467 78.6291 239.194 77.4835 239.456 77.3533C239.561 77.3012 239.823 77.4574 239.823 77.2491C239.823 77.0929 239.561 77.145 239.456 77.145M236.283 78.2906C236.021 78.1604 235.785 78.4208 235.916 78.4728C236.179 78.603 236.415 78.3687 236.283 78.2906ZM235.733 78.4728C235.392 78.5249 234.317 78.4208 234.422 79.0196L235.733 78.4728ZM234.055 79.0196C232.823 79.2539 231.354 79.6184 230.174 80.0871C229.886 80.1912 229.676 79.9829 229.781 80.5037C231.013 80.2173 232.351 79.8007 233.557 79.3581C233.766 79.28 234.107 79.306 234.081 79.0456M229.598 80.5037L229.047 80.3214C228.942 80.8161 229.152 80.712 229.598 80.6859V80.5037Z" fill="white"/><path d="M156.474 127.759C156.946 128.124 160.721 126.249 161.456 125.963C161.691 125.859 162.373 125.755 162.426 125.729C162.635 125.494 162.216 123.411 162.557 123.151C163.002 122.812 165.886 121.745 166.516 121.589C167.46 121.381 170.448 121.25 171.13 121.927C171.34 122.11 171.523 124.531 171.681 125.182C172.127 127.056 173.333 128.905 175.456 128.905C174.932 123.646 170.029 120.651 170.842 115.002C171.759 108.805 182.666 108.883 187.15 110.341C194.019 112.58 190.689 122.005 183.715 121.328C182.902 121.25 181.565 120.86 181.408 119.896C181.093 117.944 187.517 113.882 183.007 112.398C178.471 110.914 178.419 115.835 179.048 118.907C179.73 122.188 184.213 129.217 182.824 132.055C181.749 134.268 175.404 133.8 173.385 133.201C170.134 132.238 167.696 129.842 164.733 128.306C159.122 131.092 152.462 137.471 147.035 130.519C143.732 133.123 139.196 135.232 135.368 132.316C133.061 130.571 133.611 129.296 134.712 126.926C137.439 121.146 149.867 110.237 156.369 109.638C158.886 109.404 162.583 109.794 164.628 111.409C167.145 113.387 166.385 116.356 163.527 117.475C163.133 117.631 162.583 117.579 162.163 117.788C160.905 118.412 157.077 125.989 156.448 127.707M154.979 118.543H149.683C148.503 120.131 147.271 122.162 146.668 124.036C146.38 124.869 145.855 126.093 146.537 126.848C147.507 127.082 152.331 122.344 153.118 121.407C153.852 120.547 154.508 119.584 154.979 118.543Z" fill="white"/><path d="M348.866 29.3688V30.0718C338.457 35.5394 328.232 41.3194 317.928 46.9432C315.673 48.1669 311.399 49.9113 309.643 51.4475C309.433 51.6297 309.171 51.7339 309.249 52.0723C310.298 52.2546 311.242 52.593 312.317 52.4368C325.82 45.3029 339.086 37.6743 352.405 30.1759C352.746 30.0978 354.608 29.1866 354.267 30.1759C354.215 30.3061 352.301 31.3996 351.96 31.5819C339.847 38.6897 327.131 44.8603 315.07 52.0202C314.729 52.2285 314.257 52.4368 314.074 52.8013C315.935 52.9836 317.797 52.9576 319.606 52.4889C331.588 46.7349 342.967 38.9241 354.818 32.9618C355.63 32.5452 356.469 32.0505 357.413 32.1286L356.758 33.0399L319.396 53.5824C313.209 59.4926 305.658 63.0596 297.032 63.7105C293.099 63.9969 288.773 63.5803 284.945 63.8927C284.735 63.8927 283.083 64.1791 283.372 64.4395C287.173 65.6111 291.159 65.9756 295.091 66.4703C290.477 70.558 284.709 73.3439 278.574 74.3593C270.498 75.7131 262.266 73.8646 254.164 73.6823L255.763 72.7971C261.086 70.6621 266.382 68.3189 271.888 66.6265C274.3 65.8715 276.948 65.4809 279.282 64.5436C286.728 61.6016 293.597 56.2641 301.463 53.5043C303.455 52.8013 305.631 52.4629 307.493 51.7339C310.089 50.7184 313.182 48.8438 315.673 47.49C325.348 42.2307 334.865 36.2423 344.619 31.1913C345.169 30.9049 348.551 29.0824 348.84 29.3688" fill="white"/><path d="M344.959 1.66598C345.037 2.03049 344.775 2.1086 344.565 2.29085C342.782 3.90509 340.292 5.54537 338.325 6.97736C327.208 15.0746 315.463 22.4949 304.792 31.1129C304.293 31.7638 302.72 34.081 304.529 33.2478L341.026 6.87321C341.55 6.48267 342.363 5.90988 342.94 6.56078C342.94 6.76907 340.921 8.22709 340.58 8.46142C328.441 17.2616 316.013 25.6453 303.874 34.4455C302.615 35.6432 300.859 37.2574 300.964 39.132C314.519 29.9152 327.471 19.8392 340.868 10.4141L341.812 10.336L341.157 11.2473C321.126 24.7861 302.012 41.1107 280.723 52.6448C280.067 53.0093 275.689 55.4306 275.4 55.1963C276.397 53.504 277.76 52.0459 278.887 50.4577C282.348 45.5629 285.232 40.1995 289.794 36.1899C294.671 31.894 300.623 29.6288 306.863 28.0146C312.972 24.1873 318.845 19.8653 324.744 15.6474C330.329 11.6639 336.306 6.63889 341.996 3.0459C342.389 2.78554 344.696 1.40562 344.959 1.63995" fill="white"/><path d="M259.357 54.1029C258.282 55.3787 256.945 56.4462 255.922 57.8001C254.69 59.4404 253.903 61.3931 252.566 62.9552C248.292 67.9281 234.213 73.4218 227.763 75.4526C226.741 75.765 225.613 76.2076 224.564 76.2337C231.696 69.5424 236.913 61.0546 246.221 56.993C250.311 55.1965 254.873 54.155 259.383 54.0769" fill="white"/><path d="M282.978 40.0696C283.241 40.2779 280.96 43.0637 280.724 43.4543C277.656 48.4532 278.311 50.5621 273.015 54.6238C268.217 58.2949 261.374 62.2263 255.947 65.0122C255.396 65.2986 252.434 66.8868 252.093 66.6525C255.082 62.6169 257.782 58.347 260.771 54.3114C263.76 50.2758 266.225 47.5159 270.525 44.8082C274.195 42.4909 278.574 40.4341 282.978 40.0956" fill="white"/><path d="M136.337 110.263C140.821 110.002 139.326 112.919 138.199 115.444C136.573 119.063 134.581 122.63 132.85 126.197C131.985 128.02 131.067 130.936 130.071 132.498C129.075 134.086 127.187 134.008 125.483 133.852C122.048 133.539 122.415 132.55 123.438 129.972C125.247 125.442 127.947 120.052 130.386 115.809C131.906 113.153 132.85 110.471 136.337 110.263Z" fill="white"/><path d="M48.5042 128.723C50.5231 128.41 55.6619 128.723 55.2424 131.717C54.7705 134.997 47.7177 135.206 46.0397 132.732C44.7812 130.857 46.5903 129.009 48.5042 128.723Z" fill="white"/><path d="M140.428 102.713C141.975 102.556 144.57 102.817 145.567 104.144C147.297 106.436 143.627 107.529 141.87 107.659C136.18 108.076 133.795 103.337 140.428 102.713Z" fill="white"/><path d="M101.019 68.318C101.019 68.318 100.443 68.266 100.47 67.9541C101.15 67.7462 100.993 68.292 101.019 68.318C101.124 68.396 101.412 68.448 101.752 68.6819C101.36 68.6299 101.333 68.6819 101.386 69.0458C100.993 68.6039 101.098 68.422 101.019 68.318Z" fill="white"/><path d="M340.474 21.0369H340.657C340.657 21.0369 340.71 21.2708 340.605 21.3488C340.422 21.4787 340.134 21.3488 340.029 21.7907C339.61 21.1148 340.396 21.1668 340.5 21.0629" fill="white"/><path d="M239.455 77.1709V77.3532C239.193 77.4833 236.492 78.6289 236.466 78.1863C237.41 77.8739 238.458 77.3011 239.455 77.1709Z" fill="white"/><path d="M340.657 22.8855C340.657 22.8855 340.736 23.2234 340.605 23.3794C340.16 24.0292 339.218 23.3274 340.657 22.8855Z" fill="white"/><path d="M235.731 78.4727L234.422 79.0185C234.291 78.3947 235.39 78.5246 235.731 78.4727Z" fill="white"/><path d="M229.598 80.5053V80.6893C229.151 80.6893 228.941 80.8208 229.046 80.3213L229.598 80.5053Z" fill="white"/><path d="M236.284 78.2908C236.284 78.2908 236.179 78.6063 235.916 78.4748C235.785 78.4222 236.022 78.1593 236.284 78.2908Z" fill="white"/><path d="M240.374 76.989C240.374 76.989 240.269 77.3045 240.006 77.1731C239.875 77.1205 240.111 76.8576 240.374 76.989Z" fill="white"/><path d="M339.743 21.7925C339.743 21.7925 339.638 22.108 339.375 21.9765C339.244 21.9239 339.48 21.6611 339.743 21.7925Z" fill="white"/></g><defs><clipPath id="hero-clip"><rect width="466.273" height="169.704" fill="white"/></clipPath></defs></svg>
+    <div class="hero-badge"><span></span> Em produção</div>
+    <h1 class="hero-title" id="hero-title">Institucional <span>M Dias Branco</span></h1>
+    <p class="hero-desc" id="hero-desc">Produção de vídeo institucional para M Dias Branco, destacando história, valores e inovações da empresa.</p>
+    <div class="hero-meta">
+      <div class="meta-item"><label>Cliente</label><span id="meta-client">M Dias Branco</span></div>
+      <div class="meta-item"><label>Produtora</label><span id="meta-producer">Firma Produções</span></div>
+      <div class="meta-item"><label>Diretor</label><span id="meta-director">Victor Nery</span></div>
+      <div class="meta-item"><label>Início</label><span id="meta-start">—</span></div>
+      <div class="meta-item"><label>Entrega</label><span id="meta-end">—</span></div>
+    </div>
+    <div class="hero-progress-wrap">
+      <div class="progress-row">
+        <span class="progress-lbl">Progresso geral</span>
+        <span class="progress-pct" id="overall-pct">0%</span>
+      </div>
+      <div class="progress-bar"><div class="progress-fill" id="overall-bar" style="width:0%"></div></div>
+    </div>
+    <div class="hero-footer">
+      <span class="hero-footer-lbl">Produzido por</span>
+      <svg class="hero-firma-svg" viewBox="0 0 2913.293 893.905" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><style>.hfst0{fill:#b34238}.hfst1{fill:#fff}</style></defs><polygon class="hfst1" points="0 627.267 123.323 627.267 123.323 378.844 324.723 378.844 324.723 254.633 123.323 254.633 123.323 129.535 399.25 129.535 399.25 6.211 0 6.211 0 627.267"/><polygon class="hfst1" points="528.537 199.589 527.891 627.267 650.327 627.267 649.791 199.589 528.537 199.589"/><path class="hfst1" d="M1240.324,302.987c20.101-31.053,30.165-66.098,30.165-105.137,0-26.617-5.184-51.458-15.526-74.526-10.355-23.069-24.26-43.321-41.7-60.775-17.453-17.438-37.707-31.191-60.774-41.255-23.067-10.051-47.619-15.083-73.639-15.083h-251.084v621.056h122.437v-236.889h74.526l168.573,236.889h150.829l-182.769-255.52c32.523-14.779,58.848-37.707,78.963-68.76ZM1124.985,247.093c-14.793,13.903-37.86,20.849-69.205,20.849h-105.579v-138.406h105.579c31.345,0,54.412,6.654,69.205,19.963,14.777,13.308,22.181,29.43,22.181,48.352s-7.404,35.35-22.181,49.242Z"/><polygon class="hfst1" points="1816.117 275.927 1538.418 0 1470.1 0 1470.1 627.267 1593.424 627.267 1593.424 226.242 1816.117 448.048 2039.699 226.242 2039.699 627.267 2162.134 627.267 2162.134 0 2094.706 0 1816.117 275.927"/><path class="hfst1" d="M2442.051,570.929c9.164-20.407,17.591-39.482,25.285-57.226h236.891l50.57,113.564h135.746L2611.068,0h-52.347l-275.926,627.267h134.857c7.099-17.148,15.22-35.932,24.398-56.338ZM2585.338,246.648l63.879,143.73h-127.761l63.882-143.73Z"/><circle class="hfst0" cx="589.164" cy="67.984" r="60.627"/><path class="hfst1" d="M1719.657,709.734h-67.769v181.066h20.433v-63.89h43.974c38.542,0,71.134-20.176,71.134-59.235v-.517c0-35.697-26.899-57.424-67.772-57.424ZM1766.736,768.451c0,23.798-19.659,39.835-49.664,39.835h-44.751v-79.671h45.785c29.23,0,48.63,13.453,48.63,39.319v.517Z"/><path class="hfst1" d="M2114.148,764.053v-.517c0-14.227-5.175-26.9-13.97-35.694-11.382-11.382-29.23-18.108-51.475-18.108h-77.857v181.066h20.433v-70.357h51.734l52.508,70.357h25.089l-55.613-73.979c28.454-5.173,49.149-22.761,49.149-52.768ZM1991.28,802.078v-73.462h55.87c29.23,0,46.302,13.453,46.302,35.697v.517c0,23.281-19.399,37.248-46.559,37.248h-55.613Z"/><path class="hfst1" d="M2389.176,706.629c-55.096,0-92.604,43.717-92.604,93.638v.517c0,49.924,36.991,93.121,92.084,93.121s92.604-43.714,92.604-93.638v-.517c0-49.924-36.991-93.121-92.084-93.121ZM2460.049,800.784c0,41.129-29.487,74.239-70.874,74.239s-71.394-33.626-71.394-74.755v-.517c0-41.126,29.488-74.236,70.874-74.236s71.394,33.626,71.394,74.753v.517Z"/><rect class="hfst1" x="2889.498" y="863.64" width="23.795" height="27.159"/><path class="hfst1" d="M2785.624,774.513l-55.877-32.261-55.877-32.26c-18.939-10.935-42.614,2.734-42.614,24.603v129.042c0,21.869,23.674,35.538,42.614,24.603l55.877-32.261,55.877-32.26c18.939-10.935,18.939-38.271,0-49.207ZM2757.578,815.735l-38.231,22.073-38.232,22.073c-12.958,7.482-29.157-1.87-29.157-16.833v-88.292c0-14.964,16.198-24.315,29.157-16.834l38.232,22.073,38.231,22.073c12.958,7.482,12.958,26.186,0,33.667Z"/></svg>
+    </div>
+  </div>
+
+  <!-- STAGE TABS -->
+  <div class="stage-tabs" id="stage-tabs"></div>
+
+  <!-- STAGE PANELS -->
+  <div id="stage-panels"></div>
+
+</main>
+
+<!-- ═══ LOGIN MODAL ═══ -->
+<div class="overlay" id="login-overlay">
+  <div class="login-box">
+    <h2>Acesso Administrativo</h2>
+    <p>Digite a senha para acessar o painel de configuração do projeto.</p>
+    <div class="field">
+      <label>Senha</label>
+      <input type="password" id="login-pw" placeholder="••••••••••" onkeydown="if(event.key==='Enter')doLogin()" />
+      <div class="field-err" id="login-err">Senha incorreta. Tente novamente.</div>
+    </div>
+    <button class="btn-full" onclick="doLogin()">Entrar</button>
+    <button class="btn-cancel" onclick="closeLogin()">Cancelar</button>
+  </div>
+</div>
+
+<!-- ═══ ADMIN PANEL ═══ -->
+<div id="admin-panel">
+
+  <div class="adm-header">
+    <h1>⚙ Painel Administrativo</h1>
+    <span class="adm-header-badge">firmaprod</span>
+    <button class="btn-save-all" onclick="saveAll()">💾 Salvar tudo</button>
+    <button class="btn-close-adm" onclick="closeAdmin()">✕ Fechar</button>
+  </div>
+
+  <div class="adm-body">
+    <!-- Sidebar -->
+    <nav class="adm-sidebar">
+      <div class="adm-nav-section">Geral</div>
+      <div class="adm-nav-item active" onclick="switchAdmSection('info')"><span class="nav-icon">🗂</span> Informações</div>
+
+      <div class="adm-nav-section">Etapas</div>
+      <div class="adm-nav-item" onclick="switchAdmSection('pre')"><span class="nav-icon">📋</span> Pré-Produção</div>
+      <div class="adm-nav-item" onclick="switchAdmSection('prod')"><span class="nav-icon">🎬</span> Produção</div>
+      <div class="adm-nav-item" onclick="switchAdmSection('pos')"><span class="nav-icon">🎞️</span> Pós-Produção</div>
+    </nav>
+
+    <!-- Content -->
+    <div class="adm-content">
+
+      <!-- INFO -->
+      <div class="adm-section active" id="adm-info">
+        <div class="adm-section-title">Informações do Projeto</div>
+        <div class="adm-section-sub">Configure os dados gerais exibidos no topo do dashboard para o cliente.</div>
+        <div class="form-row">
+          <div class="adm-field"><label>Título do projeto</label><input type="text" id="f-title" /></div>
+          <div class="adm-field"><label>Cliente</label><input type="text" id="f-client" /></div>
+        </div>
+        <div class="form-row">
+          <div class="adm-field"><label>Produtora</label><input type="text" id="f-producer" /></div>
+          <div class="adm-field"><label>Diretor(a)</label><input type="text" id="f-director" /></div>
+        </div>
+        <div class="form-row full">
+          <div class="adm-field"><label>Descrição do projeto</label><textarea id="f-desc" rows="3"></textarea></div>
+        </div>
+        <div class="form-row">
+          <div class="adm-field"><label>Data de início</label><input type="date" id="f-start" /></div>
+          <div class="adm-field"><label>Data de entrega</label><input type="date" id="f-end" /></div>
+        </div>
+      </div>
+
+      <!-- PRE / PROD / POS sections rendered by JS -->
+      <div class="adm-section" id="adm-pre"></div>
+      <div class="adm-section" id="adm-prod"></div>
+      <div class="adm-section" id="adm-pos"></div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+/* ════════════════════════════════════════
+   DEFAULT DATA
+════════════════════════════════════════ */
+const DEFAULT = {
+  project: {
+    title: "Institucional M Dias Branco",
+    client: "M Dias Branco",
+    producer: "Firma Produções",
+    director: "Victor Nery",
+    desc: "Produção de vídeo institucional para M Dias Branco, destacando história, valores e inovações da empresa.",
+    start: "2026-06-01",
+    end: "2026-08-30"
+  },
+  stages: [
+    {
+      id: "pre", name: "Pré-Produção", icon: "📋",
+      steps: [
+        { id:"s1", name:"Briefing & Alinhamento", resp:"Victor Nery", respRole:"Diretor", deadline:"2026-06-10", status:"done", priority:"alta", estimatedDays:3,
+          desc:"Reunião de alinhamento com o cliente para entendimento profundo dos objetivos, mensagens-chave, tom de comunicação e expectativas para o vídeo institucional.",
+          notes:"Cliente reforçou foco nos valores de inovação e sustentabilidade da marca.",
+          checklist:[
+            {id:"c1a",text:"Reunião inicial com cliente realizada",done:true},
+            {id:"c1b",text:"Questionário de briefing enviado e respondido",done:true},
+            {id:"c1c",text:"Objetivos e KPIs documentados",done:true},
+            {id:"c1d",text:"Tom de voz e referências visuais alinhados",done:true},
+            {id:"c1e",text:"Proposta criativa aprovada",done:true}
+          ], files:[], links:[] },
+        { id:"s2", name:"Roteiro", resp:"Equipe Criativa", respRole:"Redação & Direção", deadline:"2026-06-20", status:"in-progress", priority:"alta", estimatedDays:7,
+          desc:"Desenvolvimento e aprovação do roteiro completo do vídeo institucional, incluindo narração, falas, indicações de imagem e estrutura narrativa.",
+          notes:"Aguardando retorno do cliente sobre a versão 1.0 enviada em 14/06.",
+          checklist:[
+            {id:"c2a",text:"Estrutura narrativa definida",done:true},
+            {id:"c2b",text:"Roteiro v1.0 redigido",done:true},
+            {id:"c2c",text:"Revisão interna concluída",done:false},
+            {id:"c2d",text:"Roteiro enviado para aprovação do cliente",done:false},
+            {id:"c2e",text:"Ajustes finais e aprovação",done:false}
+          ], files:[], links:[] },
+        { id:"s3", name:"Storyboard", resp:"Direção de Arte", respRole:"Arte & Visualização", deadline:"2026-06-27", status:"pending", priority:"alta", estimatedDays:5,
+          desc:"Criação do storyboard frame a frame para aprovação visual antes das filmagens. Cada cena é representada graficamente com indicações de câmera e movimento.",
+          notes:"",
+          checklist:[
+            {id:"c3a",text:"Referências visuais coletadas",done:false},
+            {id:"c3b",text:"Frames-chave desenhados",done:false},
+            {id:"c3c",text:"Indicações de câmera adicionadas",done:false},
+            {id:"c3d",text:"Storyboard aprovado pelo diretor",done:false},
+            {id:"c3e",text:"Aprovação do cliente",done:false}
+          ], files:[], links:[] },
+        { id:"s4", name:"Locações & Casting", resp:"Produção Executiva", respRole:"Produção", deadline:"2026-07-02", status:"pending", priority:"media", estimatedDays:5,
+          desc:"Levantamento e aprovação das locações de filmagem. Seleção e confirmação dos talentos, entrevistados e porta-vozes que aparecerão no vídeo.",
+          notes:"",
+          checklist:[
+            {id:"c4a",text:"Lista de locações levantada",done:false},
+            {id:"c4b",text:"Visita técnica às locações",done:false},
+            {id:"c4c",text:"Locações aprovadas e autorizadas",done:false},
+            {id:"c4d",text:"Entrevistados confirmados",done:false}
+          ], files:[], links:[] },
+        { id:"s5", name:"Cronograma de Filmagem", resp:"Diretora de Produção", respRole:"Produção", deadline:"2026-07-04", status:"pending", priority:"alta", estimatedDays:2,
+          desc:"Definição do cronograma detalhado de todas as diárias de filmagem, com horários, locações, equipe técnica e ordem das cenas.",
+          notes:"",
+          checklist:[
+            {id:"c5a",text:"Ordem das cenas definida com diretor",done:false},
+            {id:"c5b",text:"Horários e deslocamentos mapeados",done:false},
+            {id:"c5c",text:"Cronograma enviado a toda equipe",done:false}
+          ], files:[], links:[] },
+        { id:"s6", name:"Logística & Equipamentos", resp:"Assistente de Produção", respRole:"Produção", deadline:"2026-07-06", status:"pending", priority:"media", estimatedDays:3,
+          desc:"Organização de toda a logística de produção: transporte, alimentação, hospedagem e checklist completo de equipamentos técnicos.",
+          notes:"",
+          checklist:[
+            {id:"c6a",text:"Checklist de equipamentos preenchido",done:false},
+            {id:"c6b",text:"Transporte e hospedagem reservados",done:false},
+            {id:"c6c",text:"Alimentação e breaks organizados",done:false},
+            {id:"c6d",text:"Kits confirmados com fornecedores",done:false}
+          ], files:[], links:[] }
+      ]
+    },
+    {
+      id: "prod", name: "Produção", icon: "🎬",
+      steps: [
+        { id:"s7", name:"Filmagem — Dia 1 (Sede Fortaleza)", resp:"Victor Nery", respRole:"Diretor", deadline:"2026-07-10", status:"pending", priority:"alta", estimatedDays:1,
+          desc:"Filmagem na sede da empresa em Fortaleza: entrevistas com liderança, imagens da fábrica, linha de produção e espaços institucionais.",
+          notes:"",
+          checklist:[
+            {id:"c7a",text:"Equipamentos conferidos e testados",done:false},
+            {id:"c7b",text:"Entrevistas com liderança filmadas",done:false},
+            {id:"c7c",text:"Imagens da fábrica captadas",done:false},
+            {id:"c7d",text:"Material descarregado e backup feito",done:false}
+          ], files:[], links:[] },
+        { id:"s8", name:"Filmagem — Dia 2 (Operações)", resp:"Victor Nery", respRole:"Diretor", deadline:"2026-07-11", status:"pending", priority:"alta", estimatedDays:1,
+          desc:"Cobertura das operações internas, equipes em campo, processos produtivos e imagens institucionais complementares.",
+          notes:"",
+          checklist:[
+            {id:"c8a",text:"Cobertura das operações",done:false},
+            {id:"c8b",text:"Imagens de equipe em ação",done:false},
+            {id:"c8c",text:"Cenas externas / área verde",done:false},
+            {id:"c8d",text:"Material descarregado e backup feito",done:false}
+          ], files:[], links:[] },
+        { id:"s9", name:"Captação de Áudio", resp:"Técnico de Som", respRole:"Áudio", deadline:"2026-07-11", status:"pending", priority:"alta", estimatedDays:2,
+          desc:"Captação de áudio ambiente, entrevistas e sonoras em todas as diárias de filmagem com equipamentos profissionais.",
+          notes:"",
+          checklist:[
+            {id:"c9a",text:"Equipamentos de áudio testados",done:false},
+            {id:"c9b",text:"Sonoras e entrevistas captadas",done:false},
+            {id:"c9c",text:"Áudio ambiente coletado",done:false}
+          ], files:[], links:[] },
+        { id:"s10", name:"Direção de Arte em Set", resp:"Direção de Arte", respRole:"Arte", deadline:"2026-07-11", status:"pending", priority:"media", estimatedDays:2,
+          desc:"Supervisão e execução da identidade visual em set: cenografia, figurino, props, iluminação e alinhamento da marca M Dias Branco.",
+          notes:"",
+          checklist:[
+            {id:"c10a",text:"Referências de arte aprovadas",done:false},
+            {id:"c10b",text:"Props e cenografia em set",done:false},
+            {id:"c10c",text:"Supervisão em todas as cenas",done:false}
+          ], files:[], links:[] },
+        { id:"s11", name:"Making Of", resp:"Assistente de Câmera", respRole:"Câmera", deadline:"2026-07-11", status:"pending", priority:"baixa", estimatedDays:2,
+          desc:"Registro fotográfico e audiovisual do making of das filmagens para uso em redes sociais e comunicação interna do cliente.",
+          notes:"",
+          checklist:[
+            {id:"c11a",text:"Fotos de bastidores captadas",done:false},
+            {id:"c11b",text:"Vídeos curtos de making of gravados",done:false},
+            {id:"c11c",text:"Material editado para redes sociais",done:false}
+          ], files:[], links:[] }
+      ]
+    },
+    {
+      id: "pos", name: "Pós-Produção", icon: "🎞️",
+      steps: [
+        { id:"s12", name:"Seleção & Organização do Material", resp:"Assistente de Edição", respRole:"Pós-Produção", deadline:"2026-07-18", status:"pending", priority:"media", estimatedDays:4,
+          desc:"Organização, catalogação e seleção de todo o material bruto filmado. Identificação dos melhores takes para iniciar a edição.",
+          notes:"",
+          checklist:[
+            {id:"c12a",text:"Material bruto catalogado",done:false},
+            {id:"c12b",text:"Melhores takes selecionados",done:false},
+            {id:"c12c",text:"Sincronização áudio e vídeo",done:false}
+          ], files:[], links:[] },
+        { id:"s13", name:"Edição / Montagem", resp:"Editor Sênior", respRole:"Edição", deadline:"2026-08-01", status:"pending", priority:"alta", estimatedDays:10,
+          desc:"Montagem do corte principal do vídeo com base no roteiro aprovado. Construção do ritmo narrativo, cortes e sequência de cenas.",
+          notes:"",
+          checklist:[
+            {id:"c13a",text:"Assembly cut (corte bruto)",done:false},
+            {id:"c13b",text:"Rough cut revisado internamente",done:false},
+            {id:"c13c",text:"Fine cut — estrutura narrativa finalizada",done:false},
+            {id:"c13d",text:"Inserção de placas e legendas",done:false},
+            {id:"c13e",text:"Corte final aprovado para pós",done:false}
+          ], files:[], links:[] },
+        { id:"s14", name:"Motion Graphics & VFX", resp:"Motion Designer", respRole:"Motion & VFX", deadline:"2026-08-10", status:"pending", priority:"media", estimatedDays:7,
+          desc:"Criação e inserção de animações, infográficos, vinhetas de abertura/encerramento, logotipo animado e efeitos visuais.",
+          notes:"",
+          checklist:[
+            {id:"c14a",text:"Vinheta de abertura criada",done:false},
+            {id:"c14b",text:"Lower thirds e letreiros",done:false},
+            {id:"c14c",text:"Infográficos animados",done:false},
+            {id:"c14d",text:"Encerramento com logo",done:false}
+          ], files:[], links:[] },
+        { id:"s15", name:"Correção de Cor", resp:"Colorista", respRole:"Pós-Produção", deadline:"2026-08-15", status:"pending", priority:"media", estimatedDays:4,
+          desc:"Tratamento cromático completo de todas as imagens para padronização visual, identidade estética e alinhamento com a paleta da marca.",
+          notes:"",
+          checklist:[
+            {id:"c15a",text:"Balanço de branco e exposição corrigidos",done:false},
+            {id:"c15b",text:"Grade de cor aplicada",done:false},
+            {id:"c15c",text:"Look final aprovado pelo diretor",done:false}
+          ], files:[], links:[] },
+        { id:"s16", name:"Mixagem de Áudio", resp:"Sound Designer", respRole:"Áudio", deadline:"2026-08-18", status:"pending", priority:"media", estimatedDays:3,
+          desc:"Mixagem final do áudio: equalização, trilha sonora, narração, sonoras de entrevistas e efeitos sonoros em equilíbrio profissional.",
+          notes:"",
+          checklist:[
+            {id:"c16a",text:"Trilha sonora licenciada e inserida",done:false},
+            {id:"c16b",text:"Narração equalizada e mixada",done:false},
+            {id:"c16c",text:"Mix final aprovado",done:false}
+          ], files:[], links:[] },
+        { id:"s17", name:"Revisão do Cliente", resp:"M Dias Branco", respRole:"Cliente", deadline:"2026-08-25", status:"pending", priority:"alta", estimatedDays:5,
+          desc:"Apresentação do corte final ao cliente para aprovação. Janela de 5 dias úteis para assistir, comentar e solicitar ajustes pontuais.",
+          notes:"",
+          checklist:[
+            {id:"c17a",text:"Link de prévia enviado ao cliente",done:false},
+            {id:"c17b",text:"Reunião de apresentação realizada",done:false},
+            {id:"c17c",text:"Ajustes solicitados implementados",done:false},
+            {id:"c17d",text:"Aprovação final recebida por escrito",done:false}
+          ], files:[], links:[] },
+        { id:"s18", name:"Entrega Final", resp:"Firma Produções", respRole:"Produtora", deadline:"2026-08-30", status:"pending", priority:"alta", estimatedDays:2,
+          desc:"Exportação e entrega dos arquivos finais em todos os formatos acordados: master 4K, versão broadcast, web e cortes para redes sociais.",
+          notes:"",
+          checklist:[
+            {id:"c18a",text:"Master 4K exportado",done:false},
+            {id:"c18b",text:"Versão web (H.264) exportada",done:false},
+            {id:"c18c",text:"Cortes para redes sociais (16:9, 9:16, 1:1)",done:false},
+            {id:"c18d",text:"Arquivos entregues via Drive/WeTransfer",done:false}
+          ], files:[], links:[] }
+      ]
+    }
+  ]
+};
+
+/* ════════════════════════════════════════
+   STATE
+════════════════════════════════════════ */
+const STORAGE_KEY = 'firmaprod_mdiasbranco_v1';
+let data = loadData();
+let activeStage = 'pre';
+let isAdmin = false;
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return JSON.parse(JSON.stringify(DEFAULT));
+}
+
+function saveData() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  data.project.lastSaved = new Date().toISOString();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+}
+
+/* ════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════ */
+function statusIcon(s) {
+  return { done:'✓', 'in-progress':'▶', pending:'○', review:'◎' }[s] || '○';
+}
+function statusLabel(s) {
+  return { done:'Concluído', 'in-progress':'Em andamento', pending:'Pendente', review:'Em revisão' }[s] || s;
+}
+function priorityLabel(p) {
+  return { alta:'Alta', media:'Média', baixa:'Baixa' }[p] || p;
+}
+function fmtDate(d) {
+  if (!d) return '—';
+  const [y,m,day] = d.split('-');
+  return `${day}/${m}/${y}`;
+}
+function daysLeft(deadline) {
+  if (!deadline) return null;
+  return Math.ceil((new Date(deadline) - new Date()) / 86400000);
+}
+function daysTag(deadline, status) {
+  if (status === 'done') return { cls:'done-tag', txt:'Concluído' };
+  const d = daysLeft(deadline);
+  if (d === null) return { cls:'ok', txt:'' };
+  if (d < 0)  return { cls:'overdue', txt:`${Math.abs(d)}d em atraso` };
+  if (d === 0) return { cls:'urgent',  txt:'Vence hoje' };
+  if (d <= 3)  return { cls:'urgent',  txt:`${d} dias restantes` };
+  if (d <= 7)  return { cls:'soon',    txt:`${d} dias restantes` };
+  return { cls:'ok', txt:`${d} dias restantes` };
+}
+function initials(name) {
+  return (name||'').split(' ').slice(0,2).map(w=>w[0]||'').join('').toUpperCase();
+}
+function uid() { return 's' + Date.now() + Math.floor(Math.random()*9999); }
+function clUid() { return 'c' + Date.now() + Math.floor(Math.random()*9999); }
+
+function calcProgress(steps) {
+  if (!steps || !steps.length) return 0;
+  const done = steps.filter(s => s.status === 'done').length;
+  return Math.round((done / steps.length) * 100);
+}
+function calcOverall() {
+  let total = 0, done = 0;
+  data.stages.forEach(st => {
+    total += st.steps.length;
+    done  += st.steps.filter(s => s.status === 'done').length;
+  });
+  return total ? Math.round((done/total)*100) : 0;
+}
+
+function fileIcon(name) {
+  if (!name) return '📎';
+  const ext = name.split('.').pop().toLowerCase();
+  if (['jpg','jpeg','png','gif','webp'].includes(ext)) return '🖼';
+  if (['mp4','mov','avi','webm'].includes(ext)) return '🎬';
+  if (['pdf'].includes(ext)) return '📄';
+  if (['doc','docx'].includes(ext)) return '📝';
+  if (['xls','xlsx'].includes(ext)) return '📊';
+  if (name.startsWith('http')) return '🔗';
+  return '📎';
+}
+
+/* ════════════════════════════════════════
+   RENDER CLIENT VIEW
+════════════════════════════════════════ */
+function render() {
+  const p = data.project;
+  document.getElementById('hero-title').innerHTML = p.title.replace(/M Dias Branco/gi, '<span>M Dias Branco</span>');
+  document.getElementById('hero-desc').textContent   = p.desc;
+  document.getElementById('meta-client').textContent   = p.client;
+  document.getElementById('meta-producer').textContent = p.producer;
+  document.getElementById('meta-director').textContent = p.director;
+  document.getElementById('meta-start').textContent    = fmtDate(p.start);
+  document.getElementById('meta-end').textContent      = fmtDate(p.end);
+
+  const pct = calcOverall();
+  document.getElementById('overall-pct').textContent = pct + '%';
+  document.getElementById('overall-bar').style.width  = pct + '%';
+
+  if (p.lastSaved) {
+    const d = new Date(p.lastSaved);
+    document.getElementById('last-update-lbl').textContent = 'Atualizado ' + d.toLocaleDateString('pt-BR') + ' ' + d.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
+  }
+
+  renderTabs();
+  renderPanels();
+}
+
+function renderTabs() {
+  const tabsEl = document.getElementById('stage-tabs');
+  tabsEl.innerHTML = '';
+  data.stages.forEach(st => {
+    const pct = calcProgress(st.steps);
+    const done = st.steps.filter(s => s.status === 'done').length;
+    const tab = document.createElement('div');
+    tab.className = 'stage-tab' + (st.id === activeStage ? ' active' : '');
+    tab.innerHTML = `
+      <div class="stage-tab-top">
+        <span class="stage-tab-icon">${st.icon}</span>
+        <span class="stage-tab-count">${done}/${st.steps.length}</span>
+      </div>
+      <div class="stage-tab-name">${st.name}</div>
+      <div class="stage-tab-sub">${pct}% concluído</div>
+      <div class="mini-bar"><div class="mini-fill" style="width:${pct}%"></div></div>
+    `;
+    tab.onclick = () => { activeStage = st.id; render(); };
+    tabsEl.appendChild(tab);
+  });
+}
+
+function renderPanels() {
+  const panelsEl = document.getElementById('stage-panels');
+  panelsEl.innerHTML = '';
+  data.stages.forEach(st => {
+    const panel = document.createElement('div');
+    panel.className = 'stage-panel' + (st.id === activeStage ? ' active' : '');
+    panel.id = 'panel-' + st.id;
+
+    let stepsHTML = '';
+    st.steps.forEach((step) => {
+      const cl = step.checklist || [];
+      const clDone = cl.filter(c=>c.done).length;
+      const clTotal = cl.length;
+
+      // Checklist dots (max 8 shown)
+      const maxDots = Math.min(clTotal, 8);
+      let dots = '';
+      for (let i=0;i<maxDots;i++) {
+        const dn = cl[i] && cl[i].done;
+        dots += `<span class="cl-dot ${dn?'dn':'pd'}"></span>`;
+      }
+      const clProgHTML = clTotal ? `
+        <div class="cl-prog">
+          <div class="cl-dots">${dots}</div>
+          <span class="cl-ratio">${clDone}/${clTotal}</span>
+        </div>` : '';
+
+      // Priority
+      const prio = step.priority || 'media';
+      const prioHTML = `<span class="priority ${prio}">${priorityLabel(prio)}</span>`;
+
+      // Days
+      const dt = daysTag(step.deadline, step.status);
+      const daysHTML = `
+        <div class="days-wrap">
+          <span class="dl-date">${fmtDate(step.deadline)}</span>
+          <span class="dl-tag ${dt.cls}">${dt.txt}</span>
+        </div>`;
+
+      // Effort
+      const effortHTML = step.estimatedDays ? `<span class="effort-chip">⏱ ~${step.estimatedDays} dia${step.estimatedDays>1?'s':''}</span>` : '';
+
+      // Checklist items
+      const clItemsHTML = cl.map(c => `
+        <div class="cl-item${c.done?' checked':''}" onclick="toggleCheck('${step.id}','${c.id}')">
+          <div class="cl-box${c.done?' checked':''}">${c.done?'✓':''}</div>
+          <span class="cl-text">${c.text}</span>
+        </div>`).join('');
+
+      // Files & links
+      const files = step.files || [];
+      const links = step.links || [];
+      const allAttach = [...files, ...links];
+
+      function extType(name) {
+        const ext = (name||'').split('.').pop().toLowerCase();
+        if (['jpg','jpeg','png','gif','webp'].includes(ext)) return 'Imagem';
+        if (['mp4','mov','avi','webm'].includes(ext)) return 'Vídeo';
+        if (['pdf'].includes(ext)) return 'PDF';
+        if (['doc','docx'].includes(ext)) return 'Word';
+        if (['xls','xlsx'].includes(ext)) return 'Planilha';
+        if (['zip','rar'].includes(ext)) return 'Arquivo';
+        return ext.toUpperCase() || 'Arquivo';
+      }
+
+      const attachHTML = allAttach.map(a => {
+        if (typeof a === 'object' && a.data) {
+          const fname = a.name || 'arquivo';
+          return `<a class="attach-row" href="${a.data}" download="${fname}">
+            <span class="attach-row-icon">${fileIcon(fname)}</span>
+            <span class="attach-row-info">
+              <span class="attach-row-name">${fname}</span>
+              <span class="attach-row-type">${extType(fname)}</span>
+            </span>
+            <span class="attach-row-dl">⬇ Baixar</span>
+          </a>`;
+        }
+        const url = typeof a === 'string' ? a : (a.url||'');
+        const lbl = typeof a === 'object' && a.label ? a.label : url;
+        const shortLbl = lbl.length > 50 ? lbl.substring(0,50)+'…' : lbl;
+        const domain = (() => { try { return new URL(url).hostname.replace('www.',''); } catch(e){ return 'Link'; } })();
+        return `<a class="attach-row" href="${url}" target="_blank" rel="noopener">
+          <span class="attach-row-icon">${fileIcon(url)}</span>
+          <span class="attach-row-info">
+            <span class="attach-row-name">${shortLbl}</span>
+            <span class="attach-row-type">${domain}</span>
+          </span>
+          <span class="attach-row-dl">↗ Abrir</span>
+        </a>`;
+      }).join('');
+
+      stepsHTML += `
+        <div class="step-card ${step.status}" id="step-${step.id}">
+          <div class="step-head" onclick="toggleStep('${step.id}')">
+            <div class="step-ico ${step.status}">${statusIcon(step.status)}</div>
+            <div class="step-info">
+              <div class="step-name">${step.name}</div>
+              <div class="step-resp">
+                <span style="color:var(--g2);font-size:11px">👤 ${step.resp||'—'}</span>
+                ${step.respRole?`<span style="color:var(--g3);font-size:10px;margin-left:6px">· ${step.respRole}</span>`:''}
+              </div>
+            </div>
+            ${clProgHTML}
+            ${prioHTML}
+            ${allAttach.length ? `<span class="attach-count" onclick="event.stopPropagation();toggleStep('${step.id}')">📎 ${allAttach.length}</span>` : ''}
+            ${daysHTML}
+            <span class="badge ${step.status}">${statusLabel(step.status)}</span>
+            <span class="step-toggle" id="tog-${step.id}">▾</span>
+          </div>
+          <div class="step-body" id="body-${step.id}">
+            <div class="step-sections">
+              <div>
+                ${step.desc ? `
+                  <div class="step-section">
+                    <div class="sec-label">📝 Descrição</div>
+                    <p class="step-desc" style="padding-top:0;margin-bottom:0">${step.desc}</p>
+                  </div>` : ''}
+                ${clTotal ? `
+                  <div class="step-section" style="margin-top:16px">
+                    <div class="sec-label">✅ Tarefas <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--g2)">${clDone} de ${clTotal} concluídas</span></div>
+                    <div class="cl-items">${clItemsHTML}</div>
+                  </div>` : ''}
+              </div>
+              <div>
+                <div class="step-section">
+                  <div class="sec-label">👤 Responsável</div>
+                  <div class="resp-card">
+                    <div class="avatar">${initials(step.resp)}</div>
+                    <div class="resp-card-info">
+                      <div class="resp-name">${step.resp||'—'}</div>
+                      <div class="resp-role">${step.respRole||''}</div>
+                    </div>
+                  </div>
+                  ${effortHTML ? `<div style="margin-top:8px">${effortHTML}</div>` : ''}
+                </div>
+                ${step.notes ? `
+                  <div class="step-section" style="margin-top:16px">
+                    <div class="sec-label">💬 Observações</div>
+                    <div class="step-note">${step.notes}</div>
+                  </div>` : ''}
+                ${allAttach.length ? `
+                  <div class="step-section" style="margin-top:16px">
+                    <div class="sec-label">📎 Arquivos & Links <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--g2)">${allAttach.length} item${allAttach.length>1?'s':''}</span></div>
+                    <div class="attach-grid">${attachHTML}</div>
+                  </div>` : ''}
+              </div>
+            </div>
+          </div>
+        </div>`;
+    });
+
+    panel.innerHTML = `
+      <div class="stage-panel-header">
+        <span style="font-size:22px">${st.icon}</span>
+        <h2>${st.name}</h2>
+      </div>
+      <div class="steps-list">${stepsHTML}</div>
+    `;
+    panelsEl.appendChild(panel);
+  });
+}
+
+function toggleStep(id) {
+  const body = document.getElementById('body-' + id);
+  const tog  = document.getElementById('tog-'  + id);
+  if (!body) return;
+  const open = body.classList.toggle('open');
+  tog.classList.toggle('open', open);
+}
+
+function toggleCheck(stepId, checkId) {
+  for (const st of data.stages) {
+    const step = st.steps.find(s => s.id === stepId);
+    if (step) {
+      const ci = (step.checklist||[]).find(c => c.id === checkId);
+      if (ci) { ci.done = !ci.done; saveData(); renderPanels(); renderTabs();
+        const pct = calcOverall();
+        document.getElementById('overall-pct').textContent = pct + '%';
+        document.getElementById('overall-bar').style.width = pct + '%';
+        // Re-open the step
+        setTimeout(() => {
+          const body = document.getElementById('body-' + stepId);
+          const tog  = document.getElementById('tog-'  + stepId);
+          if (body) { body.classList.add('open'); }
+          if (tog)  { tog.classList.add('open'); }
+        }, 10);
+      }
+      break;
+    }
+  }
+}
+
+/* ════════════════════════════════════════
+   LOGIN
+════════════════════════════════════════ */
+function openLogin() { document.getElementById('login-overlay').classList.add('open'); document.getElementById('login-pw').focus(); }
+function closeLogin() { document.getElementById('login-overlay').classList.remove('open'); document.getElementById('login-pw').value = ''; document.getElementById('login-err').style.display = 'none'; }
+function doLogin() {
+  const pw = document.getElementById('login-pw').value;
+  if (pw === 'firmaprod123') {
+    closeLogin();
+    isAdmin = true;
+    document.getElementById('btn-open-login').style.display = 'none';
+    document.getElementById('btn-open-admin').style.display = '';
+    openAdmin();
+  } else {
+    document.getElementById('login-err').style.display = 'block';
+    document.getElementById('login-pw').value = '';
+  }
+}
+
+/* ════════════════════════════════════════
+   ADMIN PANEL
+════════════════════════════════════════ */
+function openAdmin() {
+  document.getElementById('admin-panel').classList.add('open');
+  populateAdminForms();
+}
+function closeAdmin() {
+  document.getElementById('admin-panel').classList.remove('open');
+}
+
+function switchAdmSection(id) {
+  document.querySelectorAll('.adm-section').forEach(el => el.classList.remove('active'));
+  document.getElementById('adm-' + id).classList.add('active');
+  document.querySelectorAll('.adm-nav-item').forEach(el => el.classList.remove('active'));
+  event.currentTarget.classList.add('active');
+}
+
+function populateAdminForms() {
+  const p = data.project;
+  document.getElementById('f-title').value    = p.title    || '';
+  document.getElementById('f-client').value   = p.client   || '';
+  document.getElementById('f-producer').value = p.producer || '';
+  document.getElementById('f-director').value = p.director || '';
+  document.getElementById('f-desc').value     = p.desc     || '';
+  document.getElementById('f-start').value    = p.start    || '';
+  document.getElementById('f-end').value      = p.end      || '';
+
+  data.stages.forEach(st => renderStageAdmin(st));
+}
+
+function renderStageAdmin(stage) {
+  const el = document.getElementById('adm-' + stage.id);
+  if (!el) return;
+  el.innerHTML = `
+    <div class="adm-section-title">${stage.icon} ${stage.name}</div>
+    <div class="adm-section-sub">Gerencie as etapas, responsáveis, prazos, status e materiais de "${stage.name}".</div>
+    <div id="steps-editor-${stage.id}"></div>
+    <button class="btn-add-step" onclick="addStep('${stage.id}')">+ Adicionar etapa</button>
+  `;
+  renderStepsEditor(stage);
+}
+
+function renderStepsEditor(stage) {
+  const container = document.getElementById('steps-editor-' + stage.id);
+  if (!container) return;
+  container.innerHTML = '';
+  stage.steps.forEach((step, idx) => {
+    const card = document.createElement('div');
+    card.className = 'step-edit-card';
+    card.id = 'edit-card-' + step.id;
+
+    // Files HTML
+    const filesHTML = (step.files||[]).map((f, fi) => `
+      <div class="file-item">
+        <span>${fileIcon(f.name)} ${f.name}</span>
+        <button class="btn-del-file" onclick="removeFile('${stage.id}','${step.id}',${fi},'file')">✕</button>
+      </div>`).join('');
+    const linksHTML = (step.links||[]).map((l, li) => {
+      const url   = typeof l === 'string' ? l : l.url   || '';
+      const label = typeof l === 'object' && l.label ? l.label : url;
+      return `<div class="file-item">
+        <a href="${url}" target="_blank">${fileIcon(url)} ${label.length>50?label.substring(0,50)+'…':label}</a>
+        <button class="btn-del-file" onclick="removeFile('${stage.id}','${step.id}',${li},'link')">✕</button>
+      </div>`;
+    }).join('');
+
+    const clHTML = (step.checklist||[]).map((ci,ci_idx)=>`
+      <div class="adm-cl-item" id="adm-ci-${ci.id}">
+        <input type="checkbox" ${ci.done?'checked':''} onchange="toggleAdmCheck('${stage.id}','${step.id}','${ci.id}',this.checked)" />
+        <input type="text" value="${ci.text}" placeholder="Descrição da tarefa…" onchange="updateCheckText('${stage.id}','${step.id}','${ci.id}',this.value)" />
+        <button class="btn-del-cl" onclick="deleteCheck('${stage.id}','${step.id}','${ci.id}')">✕</button>
+      </div>`).join('');
+
+    card.innerHTML = `
+      <div class="step-edit-head" onclick="toggleEditCard('${step.id}')">
+        <div class="step-edit-num">${idx+1}</div>
+        <div class="step-edit-title">${step.name}</div>
+        <span class="step-edit-status ${step.status}">${statusLabel(step.status)}</span>
+        <span class="step-edit-chevron" id="echev-${step.id}">▾</span>
+      </div>
+      <div class="step-edit-body" id="ebody-${step.id}">
+        <div class="form-row" style="margin-top:16px">
+          <div class="adm-field"><label>Nome da etapa</label>
+            <input type="text" value="${step.name}" onchange="updateStep('${stage.id}','${step.id}','name',this.value)" /></div>
+          <div class="adm-field"><label>Responsável</label>
+            <input type="text" value="${step.resp||''}" onchange="updateStep('${stage.id}','${step.id}','resp',this.value)" /></div>
+        </div>
+        <div class="form-row">
+          <div class="adm-field"><label>Cargo / Função</label>
+            <input type="text" value="${step.respRole||''}" placeholder="Ex: Diretor, Editor…" onchange="updateStep('${stage.id}','${step.id}','respRole',this.value)" /></div>
+          <div class="adm-field"><label>Duração estimada (dias)</label>
+            <input type="number" min="1" value="${step.estimatedDays||''}" placeholder="Ex: 3" onchange="updateStep('${stage.id}','${step.id}','estimatedDays',+this.value)" /></div>
+        </div>
+        <div class="form-row">
+          <div class="adm-field"><label>Prazo</label>
+            <input type="date" value="${step.deadline||''}" onchange="updateStep('${stage.id}','${step.id}','deadline',this.value)" /></div>
+          <div class="adm-field"><label>Status</label>
+            <select onchange="updateStep('${stage.id}','${step.id}','status',this.value)">
+              <option value="pending"     ${step.status==='pending'?'selected':''}>Pendente</option>
+              <option value="in-progress" ${step.status==='in-progress'?'selected':''}>Em andamento</option>
+              <option value="review"      ${step.status==='review'?'selected':''}>Em revisão</option>
+              <option value="done"        ${step.status==='done'?'selected':''}>Concluído</option>
+            </select></div>
+        </div>
+        <div class="form-row full">
+          <div class="adm-field"><label>Prioridade</label>
+            <select onchange="updateStep('${stage.id}','${step.id}','priority',this.value)">
+              <option value="alta"  ${(step.priority||'media')==='alta' ?'selected':''}>🔴 Alta</option>
+              <option value="media" ${(step.priority||'media')==='media'?'selected':''}>🟡 Média</option>
+              <option value="baixa" ${(step.priority||'media')==='baixa'?'selected':''}>🟢 Baixa</option>
+            </select></div>
+        </div>
+        <div class="form-row full">
+          <div class="adm-field"><label>Descrição</label>
+            <textarea rows="3" onchange="updateStep('${stage.id}','${step.id}','desc',this.value)">${step.desc||''}</textarea></div>
+        </div>
+        <div class="form-row full">
+          <div class="adm-field"><label>Observações (visível ao cliente)</label>
+            <textarea rows="2" placeholder="Notas internas, avisos, contexto para o cliente…" onchange="updateStep('${stage.id}','${step.id}','notes',this.value)">${step.notes||''}</textarea></div>
+        </div>
+
+        <div class="adm-divider"><span>✅ Checklist de Tarefas</span></div>
+        <div class="adm-cl-list" id="adm-cl-${step.id}">${clHTML}</div>
+        <button class="btn-add-cl" onclick="addCheck('${stage.id}','${step.id}')">+ Adicionar tarefa</button>
+
+        <div class="adm-divider"><span>Arquivos & Links</span></div>
+        <div class="file-manager">
+          <div class="file-list" id="flist-${step.id}">
+            ${filesHTML}${linksHTML}
+            ${!filesHTML && !linksHTML ? '<span style="font-size:12px;color:var(--g2)">Nenhum arquivo ou link adicionado.</span>' : ''}
+          </div>
+          <div class="upload-row">
+            <label class="btn-upload" for="upload-${step.id}">📁 Upload de arquivo</label>
+            <input type="file" id="upload-${step.id}" multiple onchange="handleUpload('${stage.id}','${step.id}',this)" />
+          </div>
+          <div class="link-row">
+            <input type="url" placeholder="https://drive.google.com/…" id="link-input-${step.id}" />
+            <button class="btn-add-link" onclick="addLink('${stage.id}','${step.id}')">+ Link</button>
+          </div>
+        </div>
+
+        <div style="display:flex;justify-content:flex-end;margin-top:12px">
+          <button class="btn-del-step" onclick="deleteStep('${stage.id}','${step.id}')">🗑 Remover etapa</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function toggleEditCard(id) {
+  const body = document.getElementById('ebody-' + id);
+  const chev = document.getElementById('echev-' + id);
+  if (!body) return;
+  const open = body.classList.toggle('open');
+  chev.classList.toggle('open', open);
+}
+
+function updateStep(stageId, stepId, field, value) {
+  const stage = data.stages.find(s => s.id === stageId);
+  if (!stage) return;
+  const step = stage.steps.find(s => s.id === stepId);
+  if (!step) return;
+  step[field] = value;
+  // Update status badge in card header
+  if (field === 'status' || field === 'name') {
+    const card = document.getElementById('edit-card-' + stepId);
+    if (card) {
+      card.querySelector('.step-edit-title').textContent = stage.steps.find(s=>s.id===stepId).name;
+      const badge = card.querySelector('.step-edit-status');
+      badge.className = 'step-edit-status ' + value;
+      if (field === 'status') badge.textContent = statusLabel(value);
+    }
+  }
+}
+
+function addStep(stageId) {
+  const stage = data.stages.find(s => s.id === stageId);
+  if (!stage) return;
+  stage.steps.push({
+    id: uid(), name: 'Nova Etapa', resp: '', deadline: '', status: 'pending', desc: '', files: [], links: []
+  });
+  renderStageAdmin(stage);
+  showToast('Etapa adicionada. Preencha os dados e salve.');
+}
+
+function deleteStep(stageId, stepId) {
+  const stage = data.stages.find(s => s.id === stageId);
+  if (!stage) return;
+  if (!confirm('Remover esta etapa?')) return;
+  stage.steps = stage.steps.filter(s => s.id !== stepId);
+  renderStageAdmin(stage);
+  showToast('Etapa removida.');
+}
+
+/* ─── FILES ─── */
+function handleUpload(stageId, stepId, input) {
+  const stage = data.stages.find(s => s.id === stageId);
+  const step  = stage ? stage.steps.find(s => s.id === stepId) : null;
+  if (!step) return;
+  const files = Array.from(input.files);
+  let done = 0;
+  files.forEach(file => {
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      step.files.push({ name: file.name, data: e.target.result, type: file.type });
+      done++;
+      if (done === files.length) {
+        saveData();
+        render();
+        renderStepsEditor(stage);
+        showToast(files.length === 1 ? `"${files[0].name}" adicionado e salvo.` : `${files.length} arquivos adicionados e salvos.`);
+      }
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function addLink(stageId, stepId) {
+  const stage = data.stages.find(s => s.id === stageId);
+  const step  = stage ? stage.steps.find(s => s.id === stepId) : null;
+  if (!step) return;
+  const input = document.getElementById('link-input-' + stepId);
+  const url   = (input.value || '').trim();
+  if (!url) return;
+  step.links.push({ url, label: url });
+  input.value = '';
+  saveData();
+  render();
+  renderStepsEditor(stage);
+  showToast('Link adicionado e salvo.');
+}
+
+function removeFile(stageId, stepId, idx, type) {
+  const stage = data.stages.find(s => s.id === stageId);
+  const step  = stage ? stage.steps.find(s => s.id === stepId) : null;
+  if (!step) return;
+  if (type === 'file') step.files.splice(idx, 1);
+  else step.links.splice(idx, 1);
+  saveData();
+  render();
+  renderStepsEditor(stage);
+}
+
+/* ─── CHECKLIST ADMIN ─── */
+function addCheck(stageId, stepId) {
+  const stage = data.stages.find(s=>s.id===stageId);
+  const step  = stage ? stage.steps.find(s=>s.id===stepId) : null;
+  if (!step) return;
+  if (!step.checklist) step.checklist = [];
+  const newItem = { id: clUid(), text: '', done: false };
+  step.checklist.push(newItem);
+  // Append DOM directly for speed
+  const list = document.getElementById('adm-cl-' + stepId);
+  if (list) {
+    const div = document.createElement('div');
+    div.className = 'adm-cl-item';
+    div.id = 'adm-ci-' + newItem.id;
+    div.innerHTML = `
+      <input type="checkbox" onchange="toggleAdmCheck('${stageId}','${stepId}','${newItem.id}',this.checked)" />
+      <input type="text" value="" placeholder="Descrição da tarefa…" onchange="updateCheckText('${stageId}','${stepId}','${newItem.id}',this.value)" />
+      <button class="btn-del-cl" onclick="deleteCheck('${stageId}','${stepId}','${newItem.id}')">✕</button>`;
+    list.appendChild(div);
+    div.querySelector('input[type=text]').focus();
+  }
+}
+
+function toggleAdmCheck(stageId, stepId, checkId, val) {
+  const stage = data.stages.find(s=>s.id===stageId);
+  const step  = stage ? stage.steps.find(s=>s.id===stepId) : null;
+  const ci    = step ? (step.checklist||[]).find(c=>c.id===checkId) : null;
+  if (ci) ci.done = val;
+}
+
+function updateCheckText(stageId, stepId, checkId, val) {
+  const stage = data.stages.find(s=>s.id===stageId);
+  const step  = stage ? stage.steps.find(s=>s.id===stepId) : null;
+  const ci    = step ? (step.checklist||[]).find(c=>c.id===checkId) : null;
+  if (ci) ci.text = val;
+}
+
+function deleteCheck(stageId, stepId, checkId) {
+  const stage = data.stages.find(s=>s.id===stageId);
+  const step  = stage ? stage.steps.find(s=>s.id===stepId) : null;
+  if (!step) return;
+  step.checklist = (step.checklist||[]).filter(c=>c.id!==checkId);
+  const el = document.getElementById('adm-ci-' + checkId);
+  if (el) el.remove();
+}
+
+/* ─── SAVE ALL ─── */
+function saveAll() {
+  data.project.title    = document.getElementById('f-title').value;
+  data.project.client   = document.getElementById('f-client').value;
+  data.project.producer = document.getElementById('f-producer').value;
+  data.project.director = document.getElementById('f-director').value;
+  data.project.desc     = document.getElementById('f-desc').value;
+  data.project.start    = document.getElementById('f-start').value;
+  data.project.end      = document.getElementById('f-end').value;
+  data.project.lastSaved = new Date().toISOString();
+  saveData();
+  render();
+  showToast('✓ Dados salvos com sucesso!');
+}
+
+/* ─── TOAST ─── */
+function showToast(msg, isErr) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className   = 'toast' + (isErr ? ' error' : '') + ' show';
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+/* ════════════════════════════════════════
+   INIT
+════════════════════════════════════════ */
+render();
+</script>
+</body>
+</html>
