@@ -650,11 +650,13 @@
 
         <div class="adm-divider"><span>Configurar JSONBin.io</span></div>
 
-        <div style="background:rgba(227,6,19,.05);border:1px solid rgba(227,6,19,.15);border-radius:10px;padding:16px 18px;margin-bottom:20px;font-size:13px;color:var(--g1);line-height:1.6">
-          <strong style="color:var(--white)">Como configurar:</strong><br>
-          1. Acesse <a href="https://jsonbin.io" target="_blank" style="color:var(--red)">jsonbin.io</a> e crie uma conta gratuita<br>
-          2. Vá em <strong>API Keys</strong> e copie sua chave<br>
-          3. Cole abaixo e clique em <strong>"Conectar e criar bin"</strong>
+        <div style="background:rgba(227,6,19,.05);border:1px solid rgba(227,6,19,.15);border-radius:10px;padding:16px 18px;margin-bottom:20px;font-size:13px;color:var(--g1);line-height:1.7">
+          <strong style="color:var(--white)">Como configurar (uma única vez):</strong><br>
+          1. Acesse <a href="https://jsonbin.io" target="_blank" style="color:var(--red)">jsonbin.io</a> → crie conta gratuita<br>
+          2. Vá em <strong>API Keys</strong> e copie sua Master Key<br>
+          3. Cole abaixo e clique em <strong>"Conectar e criar bin"</strong><br>
+          4. Copie o snippet gerado → cole no <code style="color:var(--white)">index.html</code> → git push<br>
+          <span style="color:#86efac;font-size:11px;margin-top:4px;display:block">✓ Após o push, o dashboard sincroniza automaticamente em qualquer navegador — o cliente não precisa configurar nada.</span>
         </div>
 
         <div class="form-row full" style="margin-bottom:12px">
@@ -676,7 +678,7 @@
         </div>
 
         <div style="margin-top:12px;font-size:11px;color:var(--g2)">
-          ⓘ Os dados ficam num bin <strong>privado</strong> na sua conta JSONBin. Apenas quem tiver a chave consegue acessar.
+          ⓘ O bin é <strong>público para leitura</strong> — qualquer pessoa com o link do dashboard vê os dados atualizados. Só quem tem a API Key consegue modificar. A chave fica salva apenas neste navegador (admin).
         </div>
       </div>
 
@@ -710,7 +712,7 @@ const DEFAULT = {
     {
       id: "pre", name: "Pré-Produção", icon: "📋",
       steps: [
-        { id:"s1", name:"Briefing & Alinhamento", resp:"Victor Nery", respRole:"Diretor", deadline:"2026-06-10", status:"done", priority:"alta", estimatedDays:3,
+        { id:"s1", name:"Briefing & Alinhamento", respFirma:"Victor Nery", respMDias:"", deadline:"2026-06-10", status:"done", priority:"alta", estimatedDays:3,
           desc:"Reunião de alinhamento com o cliente para entendimento profundo dos objetivos, mensagens-chave, tom de comunicação e expectativas para o vídeo institucional.",
           notes:"Cliente reforçou foco nos valores de inovação e sustentabilidade da marca.",
           checklist:[
@@ -720,7 +722,7 @@ const DEFAULT = {
             {id:"c1d",text:"Tom de voz e referências visuais alinhados",done:true},
             {id:"c1e",text:"Proposta criativa aprovada",done:true}
           ], files:[], links:[] },
-        { id:"s2", name:"Roteiro", resp:"Equipe Criativa", respRole:"Redação & Direção", deadline:"2026-06-20", status:"in-progress", priority:"alta", estimatedDays:7,
+        { id:"s2", name:"Roteiro", respFirma:"Equipe Criativa", respMDias:"", deadline:"2026-06-20", status:"in-progress", priority:"alta", estimatedDays:7,
           desc:"Desenvolvimento e aprovação do roteiro completo do vídeo institucional, incluindo narração, falas, indicações de imagem e estrutura narrativa.",
           notes:"Aguardando retorno do cliente sobre a versão 1.0 enviada em 14/06.",
           checklist:[
@@ -730,7 +732,7 @@ const DEFAULT = {
             {id:"c2d",text:"Roteiro enviado para aprovação do cliente",done:false},
             {id:"c2e",text:"Ajustes finais e aprovação",done:false}
           ], files:[], links:[] },
-        { id:"s3", name:"Storyboard", resp:"Direção de Arte", respRole:"Arte & Visualização", deadline:"2026-06-27", status:"pending", priority:"alta", estimatedDays:5,
+        { id:"s3", name:"Storyboard", respFirma:"Direção de Arte", respMDias:"", deadline:"2026-06-27", status:"pending", priority:"alta", estimatedDays:5,
           desc:"Criação do storyboard frame a frame para aprovação visual antes das filmagens. Cada cena é representada graficamente com indicações de câmera e movimento.",
           notes:"",
           checklist:[
@@ -740,7 +742,7 @@ const DEFAULT = {
             {id:"c3d",text:"Storyboard aprovado pelo diretor",done:false},
             {id:"c3e",text:"Aprovação do cliente",done:false}
           ], files:[], links:[] },
-        { id:"s4", name:"Locações & Casting", resp:"Produção Executiva", respRole:"Produção", deadline:"2026-07-02", status:"pending", priority:"media", estimatedDays:5,
+        { id:"s4", name:"Locações & Casting", respFirma:"Produção Executiva", respMDias:"", deadline:"2026-07-02", status:"pending", priority:"media", estimatedDays:5,
           desc:"Levantamento e aprovação das locações de filmagem. Seleção e confirmação dos talentos, entrevistados e porta-vozes que aparecerão no vídeo.",
           notes:"",
           checklist:[
@@ -749,7 +751,7 @@ const DEFAULT = {
             {id:"c4c",text:"Locações aprovadas e autorizadas",done:false},
             {id:"c4d",text:"Entrevistados confirmados",done:false}
           ], files:[], links:[] },
-        { id:"s5", name:"Cronograma de Filmagem", resp:"Diretora de Produção", respRole:"Produção", deadline:"2026-07-04", status:"pending", priority:"alta", estimatedDays:2,
+        { id:"s5", name:"Cronograma de Filmagem", respFirma:"Diretora de Produção", respMDias:"", deadline:"2026-07-04", status:"pending", priority:"alta", estimatedDays:2,
           desc:"Definição do cronograma detalhado de todas as diárias de filmagem, com horários, locações, equipe técnica e ordem das cenas.",
           notes:"",
           checklist:[
@@ -757,7 +759,7 @@ const DEFAULT = {
             {id:"c5b",text:"Horários e deslocamentos mapeados",done:false},
             {id:"c5c",text:"Cronograma enviado a toda equipe",done:false}
           ], files:[], links:[] },
-        { id:"s6", name:"Logística & Equipamentos", resp:"Assistente de Produção", respRole:"Produção", deadline:"2026-07-06", status:"pending", priority:"media", estimatedDays:3,
+        { id:"s6", name:"Logística & Equipamentos", respFirma:"Assistente de Produção", respMDias:"", deadline:"2026-07-06", status:"pending", priority:"media", estimatedDays:3,
           desc:"Organização de toda a logística de produção: transporte, alimentação, hospedagem e checklist completo de equipamentos técnicos.",
           notes:"",
           checklist:[
@@ -771,7 +773,7 @@ const DEFAULT = {
     {
       id: "prod", name: "Produção", icon: "🎬",
       steps: [
-        { id:"s7", name:"Filmagem — Dia 1 (Sede Fortaleza)", resp:"Victor Nery", respRole:"Diretor", deadline:"2026-07-10", status:"pending", priority:"alta", estimatedDays:1,
+        { id:"s7", name:"Filmagem — Dia 1 (Sede Fortaleza)", respFirma:"Victor Nery", respMDias:"", deadline:"2026-07-10", status:"pending", priority:"alta", estimatedDays:1,
           desc:"Filmagem na sede da empresa em Fortaleza: entrevistas com liderança, imagens da fábrica, linha de produção e espaços institucionais.",
           notes:"",
           checklist:[
@@ -780,7 +782,7 @@ const DEFAULT = {
             {id:"c7c",text:"Imagens da fábrica captadas",done:false},
             {id:"c7d",text:"Material descarregado e backup feito",done:false}
           ], files:[], links:[] },
-        { id:"s8", name:"Filmagem — Dia 2 (Operações)", resp:"Victor Nery", respRole:"Diretor", deadline:"2026-07-11", status:"pending", priority:"alta", estimatedDays:1,
+        { id:"s8", name:"Filmagem — Dia 2 (Operações)", respFirma:"Victor Nery", respMDias:"", deadline:"2026-07-11", status:"pending", priority:"alta", estimatedDays:1,
           desc:"Cobertura das operações internas, equipes em campo, processos produtivos e imagens institucionais complementares.",
           notes:"",
           checklist:[
@@ -789,7 +791,7 @@ const DEFAULT = {
             {id:"c8c",text:"Cenas externas / área verde",done:false},
             {id:"c8d",text:"Material descarregado e backup feito",done:false}
           ], files:[], links:[] },
-        { id:"s9", name:"Captação de Áudio", resp:"Técnico de Som", respRole:"Áudio", deadline:"2026-07-11", status:"pending", priority:"alta", estimatedDays:2,
+        { id:"s9", name:"Captação de Áudio", respFirma:"Técnico de Som", respMDias:"", deadline:"2026-07-11", status:"pending", priority:"alta", estimatedDays:2,
           desc:"Captação de áudio ambiente, entrevistas e sonoras em todas as diárias de filmagem com equipamentos profissionais.",
           notes:"",
           checklist:[
@@ -797,7 +799,7 @@ const DEFAULT = {
             {id:"c9b",text:"Sonoras e entrevistas captadas",done:false},
             {id:"c9c",text:"Áudio ambiente coletado",done:false}
           ], files:[], links:[] },
-        { id:"s10", name:"Direção de Arte em Set", resp:"Direção de Arte", respRole:"Arte", deadline:"2026-07-11", status:"pending", priority:"media", estimatedDays:2,
+        { id:"s10", name:"Direção de Arte em Set", respFirma:"Direção de Arte", respMDias:"", deadline:"2026-07-11", status:"pending", priority:"media", estimatedDays:2,
           desc:"Supervisão e execução da identidade visual em set: cenografia, figurino, props, iluminação e alinhamento da marca M Dias Branco.",
           notes:"",
           checklist:[
@@ -805,7 +807,7 @@ const DEFAULT = {
             {id:"c10b",text:"Props e cenografia em set",done:false},
             {id:"c10c",text:"Supervisão em todas as cenas",done:false}
           ], files:[], links:[] },
-        { id:"s11", name:"Making Of", resp:"Assistente de Câmera", respRole:"Câmera", deadline:"2026-07-11", status:"pending", priority:"baixa", estimatedDays:2,
+        { id:"s11", name:"Making Of", respFirma:"Assistente de Câmera", respMDias:"", deadline:"2026-07-11", status:"pending", priority:"baixa", estimatedDays:2,
           desc:"Registro fotográfico e audiovisual do making of das filmagens para uso em redes sociais e comunicação interna do cliente.",
           notes:"",
           checklist:[
@@ -818,7 +820,7 @@ const DEFAULT = {
     {
       id: "pos", name: "Pós-Produção", icon: "🎞️",
       steps: [
-        { id:"s12", name:"Seleção & Organização do Material", resp:"Assistente de Edição", respRole:"Pós-Produção", deadline:"2026-07-18", status:"pending", priority:"media", estimatedDays:4,
+        { id:"s12", name:"Seleção & Organização do Material", respFirma:"Assistente de Edição", respMDias:"", deadline:"2026-07-18", status:"pending", priority:"media", estimatedDays:4,
           desc:"Organização, catalogação e seleção de todo o material bruto filmado. Identificação dos melhores takes para iniciar a edição.",
           notes:"",
           checklist:[
@@ -826,7 +828,7 @@ const DEFAULT = {
             {id:"c12b",text:"Melhores takes selecionados",done:false},
             {id:"c12c",text:"Sincronização áudio e vídeo",done:false}
           ], files:[], links:[] },
-        { id:"s13", name:"Edição / Montagem", resp:"Editor Sênior", respRole:"Edição", deadline:"2026-08-01", status:"pending", priority:"alta", estimatedDays:10,
+        { id:"s13", name:"Edição / Montagem", respFirma:"Editor Sênior", respMDias:"", deadline:"2026-08-01", status:"pending", priority:"alta", estimatedDays:10,
           desc:"Montagem do corte principal do vídeo com base no roteiro aprovado. Construção do ritmo narrativo, cortes e sequência de cenas.",
           notes:"",
           checklist:[
@@ -836,7 +838,7 @@ const DEFAULT = {
             {id:"c13d",text:"Inserção de placas e legendas",done:false},
             {id:"c13e",text:"Corte final aprovado para pós",done:false}
           ], files:[], links:[] },
-        { id:"s14", name:"Motion Graphics & VFX", resp:"Motion Designer", respRole:"Motion & VFX", deadline:"2026-08-10", status:"pending", priority:"media", estimatedDays:7,
+        { id:"s14", name:"Motion Graphics & VFX", respFirma:"Motion Designer", respMDias:"", deadline:"2026-08-10", status:"pending", priority:"media", estimatedDays:7,
           desc:"Criação e inserção de animações, infográficos, vinhetas de abertura/encerramento, logotipo animado e efeitos visuais.",
           notes:"",
           checklist:[
@@ -845,7 +847,7 @@ const DEFAULT = {
             {id:"c14c",text:"Infográficos animados",done:false},
             {id:"c14d",text:"Encerramento com logo",done:false}
           ], files:[], links:[] },
-        { id:"s15", name:"Correção de Cor", resp:"Colorista", respRole:"Pós-Produção", deadline:"2026-08-15", status:"pending", priority:"media", estimatedDays:4,
+        { id:"s15", name:"Correção de Cor", respFirma:"Colorista", respMDias:"", deadline:"2026-08-15", status:"pending", priority:"media", estimatedDays:4,
           desc:"Tratamento cromático completo de todas as imagens para padronização visual, identidade estética e alinhamento com a paleta da marca.",
           notes:"",
           checklist:[
@@ -853,7 +855,7 @@ const DEFAULT = {
             {id:"c15b",text:"Grade de cor aplicada",done:false},
             {id:"c15c",text:"Look final aprovado pelo diretor",done:false}
           ], files:[], links:[] },
-        { id:"s16", name:"Mixagem de Áudio", resp:"Sound Designer", respRole:"Áudio", deadline:"2026-08-18", status:"pending", priority:"media", estimatedDays:3,
+        { id:"s16", name:"Mixagem de Áudio", respFirma:"Sound Designer", respMDias:"", deadline:"2026-08-18", status:"pending", priority:"media", estimatedDays:3,
           desc:"Mixagem final do áudio: equalização, trilha sonora, narração, sonoras de entrevistas e efeitos sonoros em equilíbrio profissional.",
           notes:"",
           checklist:[
@@ -861,7 +863,7 @@ const DEFAULT = {
             {id:"c16b",text:"Narração equalizada e mixada",done:false},
             {id:"c16c",text:"Mix final aprovado",done:false}
           ], files:[], links:[] },
-        { id:"s17", name:"Revisão do Cliente", resp:"M Dias Branco", respRole:"Cliente", deadline:"2026-08-25", status:"pending", priority:"alta", estimatedDays:5,
+        { id:"s17", name:"Revisão do Cliente", respFirma:"", respMDias:"M Dias Branco", deadline:"2026-08-25", status:"pending", priority:"alta", estimatedDays:5,
           desc:"Apresentação do corte final ao cliente para aprovação. Janela de 5 dias úteis para assistir, comentar e solicitar ajustes pontuais.",
           notes:"",
           checklist:[
@@ -870,7 +872,7 @@ const DEFAULT = {
             {id:"c17c",text:"Ajustes solicitados implementados",done:false},
             {id:"c17d",text:"Aprovação final recebida por escrito",done:false}
           ], files:[], links:[] },
-        { id:"s18", name:"Entrega Final", resp:"Firma Produções", respRole:"Produtora", deadline:"2026-08-30", status:"pending", priority:"alta", estimatedDays:2,
+        { id:"s18", name:"Entrega Final", respFirma:"Firma Produções", respMDias:"", deadline:"2026-08-30", status:"pending", priority:"alta", estimatedDays:2,
           desc:"Exportação e entrega dos arquivos finais em todos os formatos acordados: master 4K, versão broadcast, web e cortes para redes sociais.",
           notes:"",
           checklist:[
@@ -889,6 +891,12 @@ const DEFAULT = {
 ════════════════════════════════════════ */
 const STORAGE_KEY   = 'firmaprod_mdiasbranco_v1';
 const JSONBIN_CFG_KEY = 'firmaprod_jsonbin_cfg';
+
+// ▼▼▼ PREENCHA ESTE VALOR após conectar o JSONBin no painel admin ▼▼▼
+// Cole o Bin ID gerado e faça git push → o dashboard sincroniza em qualquer navegador.
+const JSONBIN_BIN_EMBEDDED = '';
+// ▲▲▲ ——————————————————————————————————————————————————— ▲▲▲
+
 let data        = JSON.parse(JSON.stringify(DEFAULT));
 let activeStage = 'pre';
 let isAdmin     = false;
@@ -896,17 +904,24 @@ let _saving     = false;
 
 /* ── JSONBin helpers ── */
 function getJBCfg() {
-  try { return JSON.parse(localStorage.getItem(JSONBIN_CFG_KEY)) || {}; } catch(e) { return {}; }
+  try {
+    const stored = JSON.parse(localStorage.getItem(JSONBIN_CFG_KEY)) || {};
+    return {
+      key: stored.key || '',
+      bin: stored.bin || JSONBIN_BIN_EMBEDDED
+    };
+  } catch(e) { return { key: '', bin: JSONBIN_BIN_EMBEDDED }; }
 }
 function setJBCfg(cfg) { localStorage.setItem(JSONBIN_CFG_KEY, JSON.stringify(cfg)); }
 
 async function jbLoad() {
   const c = getJBCfg();
-  if (!c.key || !c.bin) return null;
+  if (!c.bin) return null;
   try {
-    const r = await fetch(`https://api.jsonbin.io/v3/b/${c.bin}/latest`, {
-      headers: { 'X-Master-Key': c.key, 'X-Bin-Meta': 'false' }
-    });
+    // O bin é público — leitura não exige chave. Chave usada apenas quando disponível.
+    const headers = { 'X-Bin-Meta': 'false' };
+    if (c.key) headers['X-Master-Key'] = c.key;
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${c.bin}/latest`, { headers });
     if (!r.ok) return null;
     return await r.json();
   } catch(e) { return null; }
@@ -933,7 +948,7 @@ async function jbCreate(key) {
         'Content-Type': 'application/json',
         'X-Master-Key': key,
         'X-Bin-Name': 'dashboard-mdiasbranco',
-        'X-Bin-Private': 'true'
+        'X-Bin-Private': 'false'
       },
       body: JSON.stringify(data)
     });
@@ -967,8 +982,16 @@ function updateSyncStatus() {
   const c = getJBCfg();
   const el = document.getElementById('sync-status');
   if (!el) return;
-  el.textContent = c.bin ? '🟢 Sincronizado' : '🔴 Sem nuvem';
-  el.style.color  = c.bin ? 'var(--green)' : '#f87171';
+  if (c.bin && c.key) {
+    el.textContent = '🟢 Sincronizado';
+    el.style.color = 'var(--green)';
+  } else if (c.bin) {
+    el.textContent = '🔵 Nuvem (só leitura)';
+    el.style.color = '#60a5fa';
+  } else {
+    el.textContent = '🔴 Sem nuvem';
+    el.style.color = '#f87171';
+  }
 }
 
 /* ════════════════════════════════════════
@@ -1180,8 +1203,10 @@ function renderPanels() {
             <div class="step-info">
               <div class="step-name">${step.name}</div>
               <div class="step-resp">
-                <span style="color:var(--g2);font-size:11px">👤 ${step.resp||'—'}</span>
-                ${step.respRole?`<span style="color:var(--g3);font-size:10px;margin-left:6px">· ${step.respRole}</span>`:''}
+                ${step.respFirma?`<span style="color:var(--g2);font-size:11px">🎬 ${step.respFirma}</span>`:''}
+                ${step.respFirma&&step.respMDias?`<span style="color:var(--g3);font-size:10px;margin:0 4px">·</span>`:''}
+                ${step.respMDias?`<span style="color:var(--g2);font-size:11px">🏢 ${step.respMDias}</span>`:''}
+                ${!step.respFirma&&!step.respMDias?`<span style="color:var(--g3);font-size:11px">👤 —</span>`:''}
               </div>
             </div>
             ${clProgHTML}
@@ -1207,12 +1232,19 @@ function renderPanels() {
               </div>
               <div>
                 <div class="step-section">
-                  <div class="sec-label">👤 Responsável</div>
-                  <div class="resp-card">
-                    <div class="avatar">${initials(step.resp)}</div>
+                  <div class="sec-label">👥 Responsáveis</div>
+                  <div class="resp-card" style="margin-bottom:8px">
+                    <div class="avatar" style="background:linear-gradient(135deg,var(--red),#8b0000)">🎬</div>
                     <div class="resp-card-info">
-                      <div class="resp-name">${step.resp||'—'}</div>
-                      <div class="resp-role">${step.respRole||''}</div>
+                      <div class="resp-role" style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--g3);margin-bottom:2px">Firma Produções</div>
+                      <div class="resp-name">${step.respFirma||'—'}</div>
+                    </div>
+                  </div>
+                  <div class="resp-card">
+                    <div class="avatar" style="background:linear-gradient(135deg,#1e3a5f,#0f2040)">🏢</div>
+                    <div class="resp-card-info">
+                      <div class="resp-role" style="font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--g3);margin-bottom:2px">M. Dias Branco</div>
+                      <div class="resp-name">${step.respMDias||'—'}</div>
                     </div>
                   </div>
                   ${effortHTML ? `<div style="margin-top:8px">${effortHTML}</div>` : ''}
@@ -1336,13 +1368,36 @@ function renderSyncStatus() {
   const c = getJBCfg();
   const el = document.getElementById('sync-card-status');
   if (!el) return;
-  if (c.bin) {
+  if (c.bin && c.key) {
+    const isEmbedded = c.bin === JSONBIN_BIN_EMBEDDED && JSONBIN_BIN_EMBEDDED !== '';
+    const snippet = `const JSONBIN_BIN_EMBEDDED = '${c.bin}';`;
     el.innerHTML = `
-      <div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
-        <span style="font-size:22px">🟢</span>
+      <div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:14px 18px;margin-bottom:16px">
+        <div style="display:flex;align-items:center;gap:12px;margin-bottom:${isEmbedded ? '0' : '12px'}">
+          <span style="font-size:22px">🟢</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--green)">JSONBin conectado — leitura e escrita</div>
+            <div style="font-size:11px;color:var(--g2);margin-top:2px">Bin ID: <code style="color:var(--g1)">${c.bin}</code></div>
+          </div>
+        </div>
+        ${!isEmbedded ? `
+        <div style="background:rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:12px;margin-top:4px">
+          <div style="font-size:11px;color:#facc15;font-weight:700;margin-bottom:6px">⚠️ Passo final: para o cliente ver os dados em qualquer navegador</div>
+          <div style="font-size:11px;color:var(--g2);margin-bottom:8px">Abra o arquivo <code style="color:var(--white)">index.html</code> no seu editor, encontre a linha <code style="color:var(--white)">JSONBIN_BIN_EMBEDDED</code> e substitua por:</div>
+          <div style="position:relative">
+            <code style="display:block;background:rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.15);border-radius:6px;padding:8px 10px;font-size:12px;color:#86efac;word-break:break-all">${snippet}</code>
+            <button onclick="navigator.clipboard.writeText(\`${snippet}\`).then(()=>showToast('Snippet copiado!'))" style="position:absolute;right:6px;top:50%;transform:translateY(-50%);background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:4px;color:var(--white);font-size:10px;padding:3px 8px;cursor:pointer">Copiar</button>
+          </div>
+          <div style="font-size:11px;color:var(--g2);margin-top:8px">Depois: <strong style="color:var(--white)">git add . → git commit → git push</strong> → Vercel atualiza automaticamente.</div>
+        </div>` : ''}
+      </div>`;
+  } else if (c.bin) {
+    el.innerHTML = `
+      <div style="background:rgba(96,165,250,.08);border:1px solid rgba(96,165,250,.25);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">🔵</span>
         <div>
-          <div style="font-size:13px;font-weight:700;color:var(--green)">JSONBin conectado</div>
-          <div style="font-size:11px;color:var(--g2);margin-top:2px">Bin ID: <code style="color:var(--g1)">${c.bin}</code></div>
+          <div style="font-size:13px;font-weight:700;color:#60a5fa">Bin configurado (somente leitura)</div>
+          <div style="font-size:11px;color:var(--g2);margin-top:2px">Dashboard carrega dados da nuvem. Para salvar alterações, configure a API Key abaixo.</div>
         </div>
       </div>`;
   } else {
@@ -1351,7 +1406,7 @@ function renderSyncStatus() {
         <span style="font-size:22px">🔴</span>
         <div>
           <div style="font-size:13px;font-weight:700;color:#f87171">Sem sincronização</div>
-          <div style="font-size:11px;color:var(--g2);margin-top:2px">Dados salvos apenas neste navegador</div>
+          <div style="font-size:11px;color:var(--g2);margin-top:2px">Dados salvos apenas neste navegador. Configure o JSONBin abaixo.</div>
         </div>
       </div>`;
   }
@@ -1437,12 +1492,12 @@ function renderStepsEditor(stage) {
         <div class="form-row" style="margin-top:16px">
           <div class="adm-field"><label>Nome da etapa</label>
             <input type="text" value="${step.name}" onchange="updateStep('${stage.id}','${step.id}','name',this.value)" /></div>
-          <div class="adm-field"><label>Responsável</label>
-            <input type="text" value="${step.resp||''}" onchange="updateStep('${stage.id}','${step.id}','resp',this.value)" /></div>
+          <div class="adm-field"><label>🎬 Responsável Firma</label>
+            <input type="text" value="${step.respFirma||''}" placeholder="Ex: Victor Nery" onchange="updateStep('${stage.id}','${step.id}','respFirma',this.value)" /></div>
         </div>
         <div class="form-row">
-          <div class="adm-field"><label>Cargo / Função</label>
-            <input type="text" value="${step.respRole||''}" placeholder="Ex: Diretor, Editor…" onchange="updateStep('${stage.id}','${step.id}','respRole',this.value)" /></div>
+          <div class="adm-field"><label>🏢 Responsável M. Dias</label>
+            <input type="text" value="${step.respMDias||''}" placeholder="Ex: Fulano de Tal" onchange="updateStep('${stage.id}','${step.id}','respMDias',this.value)" /></div>
           <div class="adm-field"><label>Duração estimada (dias)</label>
             <input type="number" min="1" value="${step.estimatedDays||''}" placeholder="Ex: 3" onchange="updateStep('${stage.id}','${step.id}','estimatedDays',+this.value)" /></div>
         </div>
@@ -1533,7 +1588,7 @@ function addStep(stageId) {
   const stage = data.stages.find(s => s.id === stageId);
   if (!stage) return;
   stage.steps.push({
-    id: uid(), name: 'Nova Etapa', resp: '', deadline: '', status: 'pending', desc: '', files: [], links: []
+    id: uid(), name: 'Nova Etapa', respFirma: '', respMDias: '', deadline: '', status: 'pending', desc: '', files: [], links: []
   });
   renderStageAdmin(stage);
   showToast('Etapa adicionada. Preencha os dados e salve.');
