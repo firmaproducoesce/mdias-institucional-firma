@@ -599,6 +599,7 @@
   <div class="adm-header">
     <h1>⚙ Painel Administrativo</h1>
     <span class="adm-header-badge">firmaprod</span>
+    <span id="sync-status" style="font-size:11px;font-weight:700;">🔴 Sem nuvem</span>
     <button class="btn-save-all" onclick="saveAll()">💾 Salvar tudo</button>
     <button class="btn-close-adm" onclick="closeAdmin()">✕ Fechar</button>
   </div>
@@ -608,6 +609,7 @@
     <nav class="adm-sidebar">
       <div class="adm-nav-section">Geral</div>
       <div class="adm-nav-item active" onclick="switchAdmSection('info')"><span class="nav-icon">🗂</span> Informações</div>
+      <div class="adm-nav-item" onclick="switchAdmSection('sync')"><span class="nav-icon">☁️</span> Sincronização</div>
 
       <div class="adm-nav-section">Etapas</div>
       <div class="adm-nav-item" onclick="switchAdmSection('pre')"><span class="nav-icon">📋</span> Pré-Produção</div>
@@ -636,6 +638,45 @@
         <div class="form-row">
           <div class="adm-field"><label>Data de início</label><input type="date" id="f-start" /></div>
           <div class="adm-field"><label>Data de entrega</label><input type="date" id="f-end" /></div>
+        </div>
+      </div>
+
+      <!-- SYNC -->
+      <div class="adm-section" id="adm-sync">
+        <div class="adm-section-title">☁️ Sincronização na Nuvem</div>
+        <div class="adm-section-sub">Configure o JSONBin.io para sincronizar dados entre todos os dispositivos e navegadores.</div>
+
+        <div class="sync-card" id="sync-card-status"></div>
+
+        <div class="adm-divider"><span>Configurar JSONBin.io</span></div>
+
+        <div style="background:rgba(227,6,19,.05);border:1px solid rgba(227,6,19,.15);border-radius:10px;padding:16px 18px;margin-bottom:20px;font-size:13px;color:var(--g1);line-height:1.6">
+          <strong style="color:var(--white)">Como configurar:</strong><br>
+          1. Acesse <a href="https://jsonbin.io" target="_blank" style="color:var(--red)">jsonbin.io</a> e crie uma conta gratuita<br>
+          2. Vá em <strong>API Keys</strong> e copie sua chave<br>
+          3. Cole abaixo e clique em <strong>"Conectar e criar bin"</strong>
+        </div>
+
+        <div class="form-row full" style="margin-bottom:12px">
+          <div class="adm-field">
+            <label>API Key do JSONBin (começa com $2b$…)</label>
+            <input type="password" id="jb-key" placeholder="$2b$10$…" />
+          </div>
+        </div>
+        <div class="form-row full" style="margin-bottom:12px">
+          <div class="adm-field">
+            <label>Bin ID (preenchido automaticamente após conectar)</label>
+            <input type="text" id="jb-bin" placeholder="64abc123…" readonly style="opacity:.6" />
+          </div>
+        </div>
+
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn-full" style="flex:1;min-width:180px" onclick="connectJB()">☁️ Conectar e criar bin</button>
+          <button class="btn-cancel" style="flex:1;min-width:120px;margin-top:0" onclick="disconnectJB()">Desconectar</button>
+        </div>
+
+        <div style="margin-top:12px;font-size:11px;color:var(--g2)">
+          ⓘ Os dados ficam num bin <strong>privado</strong> na sua conta JSONBin. Apenas quem tiver a chave consegue acessar.
         </div>
       </div>
 
@@ -846,12 +887,66 @@ const DEFAULT = {
 /* ════════════════════════════════════════
    STATE
 ════════════════════════════════════════ */
-const STORAGE_KEY = 'firmaprod_mdiasbranco_v1';
-let data = loadData();
+const STORAGE_KEY   = 'firmaprod_mdiasbranco_v1';
+const JSONBIN_CFG_KEY = 'firmaprod_jsonbin_cfg';
+let data        = JSON.parse(JSON.stringify(DEFAULT));
 let activeStage = 'pre';
-let isAdmin = false;
+let isAdmin     = false;
+let _saving     = false;
 
-function loadData() {
+/* ── JSONBin helpers ── */
+function getJBCfg() {
+  try { return JSON.parse(localStorage.getItem(JSONBIN_CFG_KEY)) || {}; } catch(e) { return {}; }
+}
+function setJBCfg(cfg) { localStorage.setItem(JSONBIN_CFG_KEY, JSON.stringify(cfg)); }
+
+async function jbLoad() {
+  const c = getJBCfg();
+  if (!c.key || !c.bin) return null;
+  try {
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${c.bin}/latest`, {
+      headers: { 'X-Master-Key': c.key, 'X-Bin-Meta': 'false' }
+    });
+    if (!r.ok) return null;
+    return await r.json();
+  } catch(e) { return null; }
+}
+
+async function jbSave() {
+  const c = getJBCfg();
+  if (!c.key || !c.bin) return false;
+  try {
+    const r = await fetch(`https://api.jsonbin.io/v3/b/${c.bin}`, {
+      method: 'PUT',
+      headers: { 'Content-Type':'application/json', 'X-Master-Key': c.key },
+      body: JSON.stringify(data)
+    });
+    return r.ok;
+  } catch(e) { return false; }
+}
+
+async function jbCreate(key) {
+  try {
+    const r = await fetch('https://api.jsonbin.io/v3/b', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-Master-Key': key,
+        'X-Bin-Name': 'dashboard-mdiasbranco',
+        'X-Bin-Private': 'true'
+      },
+      body: JSON.stringify(data)
+    });
+    if (!r.ok) return null;
+    const j = await r.json();
+    return j.metadata?.id || null;
+  } catch(e) { return null; }
+}
+
+/* ── load / save ── */
+async function loadData() {
+  const remote = await jbLoad();
+  if (remote) return remote;
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (raw) return JSON.parse(raw);
@@ -859,10 +954,21 @@ function loadData() {
   return JSON.parse(JSON.stringify(DEFAULT));
 }
 
-function saveData() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+async function saveData() {
   data.project.lastSaved = new Date().toISOString();
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  // Save to cloud
+  await jbSave();
+  // Always backup in localStorage
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch(e) {}
+  updateSyncStatus();
+}
+
+function updateSyncStatus() {
+  const c = getJBCfg();
+  const el = document.getElementById('sync-status');
+  if (!el) return;
+  el.textContent = c.bin ? '🟢 Sincronizado' : '🔴 Sem nuvem';
+  el.style.color  = c.bin ? 'var(--green)' : '#f87171';
 }
 
 /* ════════════════════════════════════════
@@ -1215,7 +1321,66 @@ function populateAdminForms() {
   document.getElementById('f-start').value    = p.start    || '';
   document.getElementById('f-end').value      = p.end      || '';
 
+  // Load JSONBin config
+  const c = getJBCfg();
+  const keyEl = document.getElementById('jb-key');
+  const binEl = document.getElementById('jb-bin');
+  if (keyEl) keyEl.value = c.key || '';
+  if (binEl) binEl.value = c.bin || '';
+  renderSyncStatus();
+
   data.stages.forEach(st => renderStageAdmin(st));
+}
+
+function renderSyncStatus() {
+  const c = getJBCfg();
+  const el = document.getElementById('sync-card-status');
+  if (!el) return;
+  if (c.bin) {
+    el.innerHTML = `
+      <div style="background:rgba(34,197,94,.08);border:1px solid rgba(34,197,94,.25);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">🟢</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:var(--green)">JSONBin conectado</div>
+          <div style="font-size:11px;color:var(--g2);margin-top:2px">Bin ID: <code style="color:var(--g1)">${c.bin}</code></div>
+        </div>
+      </div>`;
+  } else {
+    el.innerHTML = `
+      <div style="background:rgba(227,6,19,.06);border:1px solid rgba(227,6,19,.2);border-radius:10px;padding:14px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">🔴</span>
+        <div>
+          <div style="font-size:13px;font-weight:700;color:#f87171">Sem sincronização</div>
+          <div style="font-size:11px;color:var(--g2);margin-top:2px">Dados salvos apenas neste navegador</div>
+        </div>
+      </div>`;
+  }
+}
+
+async function connectJB() {
+  const key = (document.getElementById('jb-key').value || '').trim();
+  if (!key) { showToast('Cole sua API Key do JSONBin primeiro.', true); return; }
+  const btn = event.currentTarget;
+  btn.textContent = '⏳ Conectando…'; btn.disabled = true;
+  // Create a new bin with current data
+  const binId = await jbCreate(key);
+  btn.textContent = '☁️ Conectar e criar bin'; btn.disabled = false;
+  if (!binId) { showToast('Erro ao conectar. Verifique a API Key.', true); return; }
+  setJBCfg({ key, bin: binId });
+  document.getElementById('jb-bin').value = binId;
+  renderSyncStatus();
+  updateSyncStatus();
+  showToast('✓ JSONBin conectado! Dados sincronizados na nuvem.');
+}
+
+function disconnectJB() {
+  if (!confirm('Desconectar o JSONBin? Os dados locais serão mantidos, mas deixarão de sincronizar.')) return;
+  setJBCfg({});
+  document.getElementById('jb-key').value = '';
+  document.getElementById('jb-bin').value = '';
+  renderSyncStatus();
+  updateSyncStatus();
+  showToast('JSONBin desconectado.');
 }
 
 function renderStageAdmin(stage) {
@@ -1479,7 +1644,11 @@ function deleteCheck(stageId, stepId, checkId) {
 }
 
 /* ─── SAVE ALL ─── */
-function saveAll() {
+async function saveAll() {
+  if (_saving) return;
+  _saving = true;
+  const btn = document.querySelector('.btn-save-all');
+  if (btn) { btn.textContent = '⏳ Salvando…'; btn.disabled = true; }
   data.project.title    = document.getElementById('f-title').value;
   data.project.client   = document.getElementById('f-client').value;
   data.project.producer = document.getElementById('f-producer').value;
@@ -1487,10 +1656,12 @@ function saveAll() {
   data.project.desc     = document.getElementById('f-desc').value;
   data.project.start    = document.getElementById('f-start').value;
   data.project.end      = document.getElementById('f-end').value;
-  data.project.lastSaved = new Date().toISOString();
-  saveData();
+  await saveData();
   render();
-  showToast('✓ Dados salvos com sucesso!');
+  if (btn) { btn.textContent = '💾 Salvar tudo'; btn.disabled = false; }
+  _saving = false;
+  const c = getJBCfg();
+  showToast(c.bin ? '✓ Salvo e sincronizado na nuvem!' : '✓ Salvo localmente (configure JSONBin para sincronizar)');
 }
 
 /* ─── TOAST ─── */
@@ -1504,7 +1675,14 @@ function showToast(msg, isErr) {
 /* ════════════════════════════════════════
    INIT
 ════════════════════════════════════════ */
-render();
+(async () => {
+  // Show loading skeleton
+  document.getElementById('stage-panels').innerHTML =
+    '<div style="text-align:center;padding:60px 0;color:var(--g2);font-size:13px;font-weight:600;letter-spacing:.05em">⏳ Carregando dados...</div>';
+  data = await loadData();
+  render();
+  updateSyncStatus();
+})();
 </script>
 </body>
 </html>
